@@ -16,8 +16,6 @@ public class AnnotationSerializerFactory extends SimpleSerializationFactory
 {
 	public AnnotationSerializerFactory()
 	{
-		String s = "";
-		s.concat("");
 	}
 	@Override
 	protected void initalizeSessionFactory()

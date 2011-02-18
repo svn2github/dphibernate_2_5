@@ -226,7 +226,12 @@ package org.dphibernate.rpc
 			   token.parentProperty=hibernateDictionary[obj].parentProperty;
 			 */
 			var key:String = StateRepository.getKey(obj);
-			trace("Asking for Lazy Data for Property " + property + " on " + key);
+			var uidKey:String = "";
+			if (Object(obj).hasOwnProperty("uid"))
+			{
+				uidKey = "  - Uid: " + obj["uid"];
+			}
+			trace("Asking for Lazy Data for Property " + property + " on " + key + uidKey);
 
 
 			if (obj is IEventDispatcher)
