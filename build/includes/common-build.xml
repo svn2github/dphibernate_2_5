@@ -1,0 +1,68 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant" name="dpHibernate-common-build" default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<path id="maven-ant-tasks.classpath" path="../build/libs/maven-ant-tasks-2.0.10.jar" />
+	<import file="ivy-includes.xml" />
+	
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+	<artifact:pom id="mypom" file="pom.xml" />
+	<artifact:pom id="parent-pom" file="../pom.xml" />
+	
+	<property name="version" value="${parent-pom.version}" />
+	<property name="source.dir" value="${basedir}/src" />
+	<property name="output.dir" value="${basedir}/bin" />
+	<property name="libs.dir" value="${basedir}/lib" />
+	<condition property="jar.sources.suffix" value="-with-source" else="">
+		<isset property="include.sources"/>
+	</condition>
+
+	
+	<target name="setup" depends="setupCustomProperties">
+		<property name="jar.name" value="${module.name}-${version}${jar.sources.suffix}.jar"  />
+		<property name="destfile" value="${output.dir}/${jar.name}" />
+	</target>
+	<!-- Override this in the target build.xml -->
+	<target name="setupCustomProperties">
+		<property name="module.name" value="dpHibernate-springExtensions2.5.6" />
+	</target>
+			
+	<path id="libraries">
+		<fileset dir="${libs.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	
+	<target name="compile" depends="setup,clean,resolve">
+		<javac srcdir="${source.dir}" destdir="${output.dir}" classpathref="libraries" fork="true" target="1.6" nowarn="true" debug="${include.sources}" />
+	</target>
+	<target name="copy-sources" if="include.sources">
+		<echo message="Source files are included in this build" />
+		<copy todir="${output.dir}">
+			<fileset dir="${source.dir}">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="jar" depends="compile,copy-sources">
+		<jar destfile="${destfile}">
+			<fileset dir="${output.dir}" />
+			<fileset dir="${source.dir}">
+				<include name="**/*.xml" />
+				<exclude name="hibernate.cfg.xml" />
+				<exclude name="log4j.properties" />
+				<include name="**/*.java" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${output.dir}"/>
+		<mkdir dir="${output.dir}" />
+		<delete file="${destfile}" failonerror="false" />
+	</target>
+
+	<target name="install" depends="jar">
+		<artifact:install file="${destfile}">
+			<pom refid="mypom" />
+		</artifact:install>
+	</target>
+</project>

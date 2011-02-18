@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.dphibernate" module="dpHibernate" />
+	<dependencies>
+		<dependency org="com.adobe.blazeds" name="blazeds-core" rev="3.2.0.3978"/>
+		<dependency org="com.adobe.blazeds" name="blazeds-common" rev="3.2.0.3978"/>
+		<dependency org="com.adobe.blazeds" name="blazeds-remoting" rev="3.2.0.3978"/>
+		<dependency org="javax.servlet" name="servlet-api" rev="2.5"/>
+		<dependency org="org.hibernate" name="hibernate-entitymanager" rev="3.5.1-Final"/>
+		<dependency org="com.google.guava" name="guava" rev="r06"/>
+		<dependency org="commons-lang" name="commons-lang" rev="2.5"/>
+		<dependency org="com.googlecode.lambdaj" name="lambdaj" rev="2.3"/>
+
+		<!--  Test Dependencies -->
+		<dependency org="org.hibernate" name="hibernate-validator" rev="4.1.0.Final"/>
+		<dependency org="org.hsqldb" name="hsqldb" rev="2.0.0"/>
+		<dependency org="org.mockito" name="mockito-core" rev="1.8.5"/>
+		<dependency org="org.dbunit" name="dbunit" rev="2.4.7"/>
+		<dependency org="junit" name="junit" rev="4.1"/>
+		
+	</dependencies>
+</ivy-module>

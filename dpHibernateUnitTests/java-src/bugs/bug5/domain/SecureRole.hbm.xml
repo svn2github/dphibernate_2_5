@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class 
+    name="bugs.bug5.domain.Role" 
+    table="secure_role"
+>
+
+
+    <id
+        name="roleID"
+        type="java.lang.String"
+        column="roleid"
+    >
+        <generator class="assigned"/>
+    </id>
+
+    <property
+        name="name"
+        type="java.lang.String"
+        column="name"
+        length="100"
+    />
+    <property
+        name="enabled"
+        type="java.lang.Boolean"
+        column="enabled"
+        length="2"
+    />
+    <property
+        name="visiable"
+        type="java.lang.Boolean"
+        column="visiable"
+        length="2"
+    />
+    <property
+        name="remark"
+        type="java.lang.String"
+        column="remark"
+        length="1000"
+    />
+
+    <!-- Associations -->
+	
+		<set name="stations" table="SECURE_ROLE_STATION" lazy="true" inverse="false" cascade="delete" batch-size="5">
+            <key>
+                <column name="ROLEID" not-null="true"/>
+            </key>
+            <many-to-many class="bugs.bug5.domain.Station" column="STATIONID"/>
+        </set>
+		
+		<set name="permissions" table="SECURE_ROLE_PERMISSION" lazy="true" inverse="false" cascade="all" batch-size="5">
+            <key>
+                <column name="ROLEID" not-null="true"/>
+            </key>
+            <many-to-many class="bugs.bug5.domain.Permission" column="PERMISSIONID"/>
+        </set>
+	
+</class>
+</hibernate-mapping>

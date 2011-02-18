@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.formatters.DateFormatter;
+			import models.beans.Photo;
+			
+			[Bindable]
+			public var photo:Photo;
+			
+			protected var dateFormatter:DateFormatter = new DateFormatter();
+			
+			protected function formatDate(dt:Date):String
+			{
+				dateFormatter.formatString = "MMM DD, YYYY";
+				return dateFormatter.format(dt);	
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Label text="{photo.name}" fontWeight="bold" fontSize="20"/>
+	
+	<mx:HBox>
+		<mx:Image source="{photo.url}" 
+			height="180" width="200" maintainAspectRatio="true"/>
+
+		<mx:Form width="100%" height="100%">
+			<mx:FormItem label="Title:">			
+				<mx:TextInput 
+					text="{photo.name}"
+					change="photo.name = event.currentTarget.text"/>
+			</mx:FormItem>
+			<mx:FormItem label="Date Taken">			
+				<mx:Label text="{ formatDate(photo.photoDetails.dateTaken) }"/>
+			</mx:FormItem>
+			<mx:FormItem label="Copyright">			
+				<mx:Label text="{ photo.photoDetails.copyright }"/>
+			</mx:FormItem>
+			<mx:FormItem label="Image Width">			
+				<mx:Label text="{ photo.photoDetails.exifImageWidth }"/>
+			</mx:FormItem>
+			<mx:FormItem label="Image Height">			
+				<mx:Label text="{ photo.photoDetails.exifImageHeight }"/>
+			</mx:FormItem>
+			<mx:FormItem label="GPS Info">			
+				<mx:Label text="{ photo.photoDetails.exifGpsInfo }"/>
+			</mx:FormItem>
+			<mx:FormItem label="Model">			
+				<mx:Label text="{ photo.photoDetails.exifModel }"/>
+			</mx:FormItem>
+			<mx:FormItem label="F-Number">			
+				<mx:Label text="{ photo.photoDetails.exifFNumber }"/>
+			</mx:FormItem>
+			<mx:FormItem label="ISO">			
+				<mx:Label text="{ photo.photoDetails.exifIso }"/>
+			</mx:FormItem>
+			<mx:FormItem label="Focal Length">			
+				<mx:Label text="{ photo.photoDetails.exifFocalLength }"/>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:HBox>
+</mx:VBox>

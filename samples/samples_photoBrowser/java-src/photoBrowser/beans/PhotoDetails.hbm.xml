@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="photoBrowser.beans" default-lazy="true">
+  <class name="PhotoDetails">
+  	<id name="id" type="string">
+    	<column name="id" length="40"  />
+        <generator class="uuid"></generator>
+	</id>
+
+  	<property name="dateTaken" type="date">
+  		<column name="dateTaken"></column>
+  	</property>
+  	<property name="copyright" type="string">
+  		<column name="copyright"></column>
+  	</property>
+  	<property name="exifModel" type="string">
+  		<column name="exifModel"></column>
+  	</property>
+  	<property name="exifFNumber" type="string">
+  		<column name="exifFNumber"></column>
+  	</property>
+  	<property name="exifIso" type="string">
+  		<column name="exifIso"></column>
+  	</property>
+  	<property name="exifFocalLength" type="string">
+  		<column name="exifFocalLength"></column>
+  	</property>
+  	<property name="exifImageWidth" type="string">
+  		<column name="exifImageWidth"></column>
+  	</property>
+  	<property name="exifImageHeight" type="string">
+  		<column name="exifImageHeight"></column>
+  	</property>
+  	<property name="exifGpsInfo" type="string">
+  		<column name="exifGpsInfo"></column>
+  	</property>
+  	<property name="exifThumbnailWidth" type="string">
+  		<column name="exifThumbnailWidth"></column>
+  	</property>
+  	<property name="exifThumbnailHeight" type="string">
+  		<column name="exifThumbnailHeight"></column>
+  	</property>
+  <!-- 
+  	<property name="exifThumbnailData" type="string">
+  		<column name="exifThumbnailData"></column>
+  	</property>
+   -->
+  
+
+  
+  	
+  	<many-to-one 
+  		name="photo" 
+  		column="photoid" 
+  		not-null="true" />
+  	
+  </class>
+</hibernate-mapping>

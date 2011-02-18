@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class 
+    name="bugs.bug5.domain.User" 
+    table="SECURE_USER"
+>
+
+
+    <id
+        name="userID"
+        type="java.lang.Long"
+        column="userid"
+    >
+        <generator class="assigned"/>
+    </id>
+    <property
+        name="name"
+        type="java.lang.String"
+        column="NAME"
+        length="100"
+    />
+    <property
+        name="loginName"
+        type="java.lang.String"
+        column="LOGINNAME"
+        length="100"
+    />
+	 <property
+        name="password"
+        type="java.lang.String"
+        column="PASSWORD"
+        length="100"
+    />
+    <property 
+    		name="phoneNum" 
+    		type="java.lang.String" 
+    		column="PHONE_NUM" 
+    		length="100" 
+    />
+      <property
+        name="enabled"
+        type="java.lang.Boolean"
+        column="enabled"
+        length="2"
+    />
+    <property
+        name="visiable"
+        type="java.lang.Boolean"
+        column="visiable"
+        length="2"
+    />
+    <property
+        name="remark"
+        type="java.lang.String"
+        column="REMARK"
+        length="1000"
+    />
+	<property
+        name="layerOrder"
+        type="java.lang.String"
+        column="LAYERORDER"
+        length="100"
+    />
+		<many-to-one
+        name="department"
+        class="bugs.bug5.domain.Department"
+        not-null="true" 
+        lazy="false"
+    >
+        <column name="DEPTID" />
+    </many-to-one>
+		<set name="stations" table="SECURE_USER_STATION" lazy="true" inverse="false" cascade="delete" batch-size="5">
+            <key>
+                <column name="USERID" not-null="true"/>
+            </key>
+            <many-to-many class="bugs.bug5.domain.Station" column="STATIONID"/>
+        </set>
+</class>
+</hibernate-mapping>

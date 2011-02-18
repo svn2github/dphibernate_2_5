@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="remoting-service" 
+    class="flex.messaging.services.RemotingService">
+
+    <adapters>
+        <adapter-definition id="java-object" class="flex.messaging.services.remoting.adapters.JavaAdapter" default="false"/>
+
+        <adapter-definition id="hibernate-object" class="net.digitalprimates.persistence.hibernate.HibernateAdapter" default="true">
+                <properties>
+                        <hibernate>
+                                <sessionFactory>
+                                <!-- nimer: use the spring specific class -->
+                                        <class>com.universalmind.hStore.util.SpringSessionUtil</class>
+                                        <getCurrentSessionMethod>getCurrentSession</getCurrentSessionMethod>                            
+                                </sessionFactory>
+                        </hibernate>
+                </properties>         
+        </adapter-definition>
+    </adapters>
+	
+	<destination id="storeService">
+		<properties>
+			<source>storeService</source>
+		    <factory>spring</factory>
+			<scope>application</scope>
+			<hibernate>
+				<!--
+					//the name of the method in this class which follows the hibernate
+					//load(Class clazz, Serializable id) argument signature.
+				-->
+				<loadMethod>load</loadMethod>
+			</hibernate>
+		</properties>
+	</destination>
+
+    <default-channels>
+        <channel ref="my-amf"/>
+    </default-channels>
+
+</service>

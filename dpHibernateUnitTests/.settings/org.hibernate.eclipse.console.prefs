@@ -1,0 +1,4 @@
+#Fri Mar 07 12:43:19 CST 2008
+default.configuration=dpHibernateUnitTests
+eclipse.preferences.version=1
+hibernate3.enabled=true

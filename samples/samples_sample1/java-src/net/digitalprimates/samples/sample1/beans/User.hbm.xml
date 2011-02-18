@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="net.digitalprimates.samples.sample1.beans">
+  <class name="User" table="users" >
+	<id name="id" type="string">
+    	<column name="id" length="40" />
+        <generator class="uuid"></generator>
+	</id>
+
+  	<property name="firstName" type="string">
+  		<column name="firstName"></column>
+  	</property>
+  	
+  	<property name="lastName" type="string">
+  		<column name="lastName"></column>
+  	</property>
+  	
+  	<many-to-one 
+  		name="connectInfo" 
+  		column="connectInfoId"
+  		cascade="all,merge"  
+  		class="UserConnectInfo">
+  	</many-to-one>
+  	
+ 
+  	<bag name="addresses" inverse="true" cascade="all">
+  		<key column="userid"></key>
+  		<one-to-many 
+  			class="net.digitalprimates.samples.sample1.beans.UserAddress"/>
+  	</bag>
+  	
+  	<list name="addressList" table="UserAddress" lazy="true">
+	    <key column="userid" />
+	    <list-index column="city"/>
+	    <one-to-many class="net.digitalprimates.samples.sample1.beans.UserAddress" />
+	</list>
+
+  	 <!-- 
+   	<bag name="addresses2" inverse="true" cascade="all" lazy="false">
+  		<key column="userid"></key>
+  		<one-to-many 
+  			class="net.digitalprimates.samples.sample1.beans.UserAddress"/>
+  	</bag>
+  	 	
+  	<bag name="addressBag" inverse="true" cascade="all">
+  		<key column="userid"></key>
+  		<one-to-many 
+  			class="net.digitalprimates.samples.sample1.beans.UserAddress"/>
+  	</bag>
+  	 	
+  	<set name="addressSet" inverse="true" cascade="all">
+  		<key column="userid"></key>
+  		<one-to-many 
+  			class="net.digitalprimates.samples.sample1.beans.UserAddress"/>
+  	</set>
+  	 	
+  	<list name="addressList" inverse="true" cascade="all">
+  		<key column="userid"></key>
+  		<index column="city" ></index>
+  		<one-to-many 
+  			class="net.digitalprimates.samples.sample1.beans.UserAddress"/>
+  	</list>
+ 	--> 	  
+  </class>
+</hibernate-mapping>

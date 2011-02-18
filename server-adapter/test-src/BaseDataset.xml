@@ -1,0 +1,15 @@
+<dataset>
+	<Publisher id="1" name="Addison" address="123 Somewhere Lane" />
+	
+	<Author id="1" name="Joshua Bloch" publisher_id="1" age="30" />
+	<Author id="2" name="Robert C. Martin" publisher_id="1" age="30" />
+	<Author id="3" name="Steve McConnell" publisher_id="1" age="30" />
+	<Author id="4" name="Andrew Hunt" publisher_id="1" age="30" />
+	<Author id="5" name="David Thomas" publisher_id="1" age="30" />
+
+	<Book id="1" title="Effective Java" author_id="1" />
+	<Book id="2" title="Clean Code" author_id="2" />
+	<Book id="3" title="Code Complete" author_id="3" />
+	<Book id="4" title="The Pragmattic Programmer" author_id="4" />
+	<Book id="5" title="Code Complete, 2nd Edition" author_id="3" />
+</dataset>

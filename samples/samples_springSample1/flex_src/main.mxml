@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  
+   	creationComplete="initApp()">
+	
+	<mx:Script>
+		<![CDATA[
+            import com.universalmind.hStore.model.vo.Cart;
+			import com.universalmind.hStore.model.vo.Item;
+
+			import mx.utils.ObjectUtil;
+			import mx.rpc.AsyncToken;
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection;
+
+			import mx.messaging.Channel;
+			import mx.messaging.ChannelSet;
+			import mx.messaging.channels.AMFChannel;
+
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+
+			
+			private var _flexChannelSet:ChannelSet;
+			
+			private function initApp():void
+			{
+				var _flexChannel:Channel = new AMFChannel("my-amf", "http://localhost:8080/springSample1/messagebroker/amf");			
+					_flexChannelSet = new ChannelSet();
+					_flexChannelSet.addChannel(_flexChannel);
+					
+				storeService.channelSet = _flexChannelSet;	
+			}
+
+			[Bindable] public var allItems:ArrayCollection = new ArrayCollection();
+			[Bindable] public var carts:ArrayCollection = new ArrayCollection();
+			[Bindable] private var _currentItem:Item;
+
+			public function onResult(event:ResultEvent):void
+			{
+				if( event.token.operation == "getCarts" )
+				{
+					carts = event.result as ArrayCollection;
+				}			
+				else if( event.token.operation == "saveItem" )
+				{
+					doGetAllCarts();
+				}	
+				else if( event.token.operation == "getItems" )
+				{
+					allItems = event.result as ArrayCollection;
+				}	
+			}
+			
+			public function onFault(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultString, "Error");
+			}
+			
+			
+			private function doResetDb():void
+			{
+				var token:AsyncToken = storeService.resetDb();
+					token.operation = "doResetDb";					
+			}
+			
+			
+			private function doGetAllCarts():void
+			{
+				var token:AsyncToken = storeService.getAllCarts();
+					token.operation = "getCarts";					
+			}
+			
+			
+			private function doGetAllItems():void
+			{
+				var token:AsyncToken = storeService.getAllItems();
+					token.operation = "getItems";					
+			}
+			
+			private function saveCurrentItem():void{
+				var token:AsyncToken = storeService.saveItem(_currentItem);
+				token.operation = "saveItem";
+				_currentItem = new Item();
+			}
+			
+			private function saveCart(cart:Cart):void{
+				var token:AsyncToken = storeService.saveCart(cart);
+					token.operation = "saveCart";
+			}
+			
+			private function onItemGridClick(e:MouseEvent):void{
+				this._currentItem = this.itemList.selectedItem as Item;
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+
+	<dp:HibernateRemoteObject
+		id="storeService"
+		destination="storeService"
+	    showBusyCursor="true" 
+		result="onResult(event)" fault="onFault(event)"
+		xmlns:dp="http://www.digitalprimates.net/2007/mxml">
+	</dp:HibernateRemoteObject>
+
+	<mx:HBox width="100%" horizontalAlign="left">		
+		<mx:Button
+			label="ResetDB"
+			click="doResetDb()"/>	
+		<mx:Button
+			label="Load/Refresh Carts"
+			click="doGetAllCarts()"/>	
+		<!--
+		<mx:Button
+			label="Get All Items"
+			click="doGetAllItems()"/>
+		-->	
+	</mx:HBox>
+	
+	
+	<mx:HBox width="100%">		
+		<mx:DataGrid
+			id="cartList"
+			dataProvider="{carts}"
+			width="100%">		
+			<mx:columns>
+					<mx:DataGridColumn headerText="orderID" dataField="orderID"/>
+					<mx:DataGridColumn headerText="total" dataField="total"/>
+			</mx:columns>
+		</mx:DataGrid>
+		
+		<!--
+		<mx:DataGrid
+			id="allItemList"
+			dataProvider="{allItems}"
+			width="100%">		
+			<mx:columns>
+					<mx:DataGridColumn headerText="name" dataField="name"/>
+					<mx:DataGridColumn headerText="sku" dataField="sku"/>
+			</mx:columns>
+		</mx:DataGrid>
+		-->
+	</mx:HBox>
+	
+	<mx:DataGrid
+		id="itemList"
+		dataProvider="{cartList.selectedItem.items}"
+		width="100%"
+		click="onItemGridClick(event)">		
+		<mx:columns>
+				<mx:DataGridColumn headerText="name" dataField="name"/>
+				<mx:DataGridColumn headerText="sku" dataField="sku"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:Canvas width="100%" height="200">
+		<mx:HBox width="100%" top="0" left="0" height="100%">
+			<mx:Panel width="49%" height="100%" layout="absolute" left="0" title="Item Detail">
+				<mx:VBox>
+					<mx:HBox>
+						<mx:Label text="Item Name: "/>
+						<mx:TextInput id="itemName" text="{_currentItem.name}"
+							change="_currentItem.name = event.currentTarget.text"/>
+					</mx:HBox>
+					<mx:HBox>
+						<mx:Label text="Item SKU: "/>
+						<mx:TextInput id="itemSKU" text="{_currentItem.sku}"
+							change="_currentItem.sku = event.currentTarget.text"/>
+					</mx:HBox>
+					<mx:HBox>
+						<mx:Label text="Item Price: "/>
+						<mx:TextInput id="itemPrice" text="{_currentItem.price}"
+							change="_currentItem.price = event.currentTarget.text"/>
+					</mx:HBox>
+					<mx:HBox>
+						<mx:Label text="Item Expires: "/>
+						<mx:DateField id="itemExpires" selectedDate="{_currentItem.expires}"
+							change="_currentItem.expires = event.currentTarget.selectedDate"/>
+					</mx:HBox>
+					<mx:Button id="saveItemBtn" label="Save Item" click="saveCurrentItem()"/>
+				</mx:VBox>
+			</mx:Panel>
+			<mx:Panel width="49%" height="100%" layout="absolute" right="0" title="Add Item To Cart">
+			</mx:Panel>
+		</mx:HBox>
+	</mx:Canvas>
+	
+	
+</mx:Application>
+
+

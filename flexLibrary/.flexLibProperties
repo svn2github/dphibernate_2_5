@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" version="1">
+  <includeClasses>
+    <classEntry path="mx.data.IManaged"/>
+    <classEntry path="mx.data.utils.Managed"/>
+    <classEntry path="org.dphibernate.util.BeanUtil"/>
+    <classEntry path="org.dphibernate.rpc.CustomBeanPopulatorRegistry"/>
+    <classEntry path="org.dphibernate.rpc.IBeanPopulator"/>
+    <classEntry path="org.dphibernate.util.ValueObjectUtil"/>
+    <classEntry path="org.dphibernate.events.LazyLoadEvent"/>
+    <classEntry path="org.dphibernate.util.ClassUtils"/>
+    <classEntry path="org.dphibernate.core.HibernateBean"/>
+    <classEntry path="org.dphibernate.rpc.HibernateManaged"/>
+    <classEntry path="org.dphibernate.rpc.HibernateManagedEntry"/>
+    <classEntry path="org.dphibernate.core.IHibernateProxy"/>
+    <classEntry path="org.dphibernate.rpc.IHibernateRPC"/>
+    <classEntry path="org.dphibernate.rpc.HibernateRemoteObject"/>
+    <classEntry path="org.dphibernate.persistence.state.ChangeMessageGenerator"/>
+    <classEntry path="org.dphibernate.persistence.state.CollectionChangeMessage"/>
+    <classEntry path="org.dphibernate.persistence.state.HibernateProxyDescriptor"/>
+    <classEntry path="org.dphibernate.persistence.state.HibernateUpdater"/>
+    <classEntry path="org.dphibernate.persistence.state.IHibernateProxyDescriptor"/>
+    <classEntry path="org.dphibernate.persistence.state.ObjectChangeMessage"/>
+    <classEntry path="org.dphibernate.persistence.state.ObjectChangeMessageCollection"/>
+    <classEntry path="org.dphibernate.persistence.state.ObjectChangeResult"/>
+    <classEntry path="org.dphibernate.persistence.state.PropertyChangeMessage"/>
+    <classEntry path="org.dphibernate.persistence.state.ReadOnlyError"/>
+    <classEntry path="org.dphibernate.persistence.state.StateRepository"/>
+    <classEntry path="org.dphibernate.util.LogUtil"/>
+    <classEntry path="org.dphibernate.core.IUpdatableHibernateProxy"/>
+    <classEntry path="org.dphibernate.persistence.state.IHibernateUpdater"/>
+    <classEntry path="org.dphibernate.persistence.state.HibernateUpdaterFacade"/>
+    <classEntry path="org.dphibernate.collections.ManagedArrayList"/>
+    <classEntry path="org.dphibernate.rpc.LoadProxyRequestBuffer"/>
+    <classEntry path="org.dphibernate.rpc.IOperationBufferFactory"/>
+    <classEntry path="org.dphibernate.rpc.IOperationBuffer"/>
+    <classEntry path="org.dphibernate.rpc.OperationBufferFactory"/>
+    <classEntry path="org.dphibernate.rpc.LoadDPProxyOperationBufferFactory"/>
+    <classEntry path="org.dphibernate.rpc.ProxyLoadRequest"/>
+    <classEntry path="org.dphibernate.rpc.ProxyLoadResult"/>
+    <classEntry path="org.dphibernate.rpc.IHibernateROProvider"/>
+    <classEntry path="org.dphibernate.rpc.DefaultHibernateRPCProvider"/>
+    <classEntry path="org.dphibernate.collections.PaginatedCollection"/>
+    <classEntry path="org.dphibernate.rpc.IDestinationAwareHibernateProxy"/>
+    <classEntry path="org.dphibernate.entitymanager.IEntityManager"/>
+    <classEntry path="org.dphibernate.entitymanager.EntityManager"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="dp-manifest.xml" sourcePath="dp-manifest.xml"/>
+  </includeResources>
+  <namespaceManifests>
+    <namespaceManifestEntry manifest="dp-manifest.xml" namespace="http://www.dphibernate.org/2010/mxml"/>
+  </namespaceManifests>
+</flexLibProperties>

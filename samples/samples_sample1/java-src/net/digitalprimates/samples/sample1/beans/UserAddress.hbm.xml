@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="net.digitalprimates.samples.sample1.beans">
+  <class name="UserAddress">
+	<id name="id" type="string">
+    	<column name="id" length="40" />
+        <generator class="uuid"></generator>
+	</id>
+	  	
+  	<property name="address1" type="string">
+  		<column name="address1"></column>
+  	</property>
+  	
+  	<property name="address2" type="string">
+  		<column name="address2"></column>
+  	</property>
+  	
+  	<property name="city" type="string">
+  		<column name="city"></column>
+  	</property>
+  	
+  	<property name="state" type="string">
+  		<column name="state"></column>
+  	</property>
+  	
+  	<property name="zip" type="string">
+  		<column name="zip"></column>
+  	</property>
+
+  	<many-to-one name="user" column="userid" not-null="true" />
+  	
+  </class>
+</hibernate-mapping>

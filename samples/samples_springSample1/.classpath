@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/backport-util-concurrent.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/c3p0-0.9.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/cfgatewayadapter.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-dbcp.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-httpclient-3.0.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-pool.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/concurrent.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ehcache-1.2.3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/flex-messaging-common.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/flex-messaging-core.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/flex-messaging-opt.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/flex-messaging-proxy.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/flex-messaging-remoting.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring.jar" sourcepath="C:/Java/libraries/spring-framework-2.5.2/src"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-context.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-context-support.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xalan.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hibernate"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="lib" path="C:/tomcat/Tomcat6.0/lib/servlet-api.jar"/>
+	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
+</classpath>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<!--
+		Note : dpHibernate does not currently use maven for building. This
+		pom.xml exists to facilitate use of the maven ant tasks for deploying
+		to local mvn repo's
+	-->
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>jar</packaging>
+	<name>spring extensions (2.5.6)</name>
+	<groupId>org.dpHibernate</groupId>
+	<artifactId>dpHibernate_spring2.5.6</artifactId>
+	<version>2.0-RC1</version>
+</project>

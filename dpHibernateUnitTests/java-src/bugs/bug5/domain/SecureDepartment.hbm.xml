@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class 
+    name="bugs.bug5.domain.Department" 
+    table="SECURE_DEPARTMENT"
+>
+
+
+    <id
+        name="departmentID"
+        type="java.lang.Long"
+        column="deptid"
+    >
+        <generator class="assigned"/>
+    </id>
+
+    <property
+        name="name"
+        type="java.lang.String"
+        column="name"
+        length="100"
+    />
+    <property
+        name="remark"
+        type="java.lang.String"
+        column="remark"
+        length="1000"
+    />
+    <property
+        name="sn"
+        type="java.lang.String"
+        column="sn"
+        length="100"
+    />
+    <property
+        name="layerOrder"
+        type="java.lang.String"
+        column="layerOrder"
+        length="100"
+    />
+  <property
+        name="type"
+        type="java.lang.String"
+        column="type"
+        length="100"
+    />
+    <!-- Associations -->
+    <many-to-one
+            name="parent"
+            column="parent" 
+            class="bugs.bug5.domain.Department"
+			not-null="false"
+        />
+  <bag name="childList"  inverse="true" cascade="all" >
+         <key column="parent" />
+         <one-to-many class="bugs.bug5.domain.Department" />
+    </bag>
+  <set
+        name="users"
+        lazy="true"
+        inverse="true"
+		cascade="save-update"
+    >
+        <key>
+            <column name="DEPTID" />
+        </key>
+        <one-to-many 
+            class="bugs.bug5.domain.User"
+        />
+    </set>
+</class>
+</hibernate-mapping>

@@ -1,0 +1,16 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant" name="dpHibernate-springExtensions-2.5.6" default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<target name="setupCustomProperties">
+		<property name="module.name" value="dpHibernate-springExtensions2.5.6" />
+	</target>
+	
+	<import file="../build/includes/common-build.xml"  />
+	
+	<path id="libraries">
+		<fileset dir="${libs.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="../server-adapter/bin">
+			<include name="dpHibernate-*.jar"/>
+		</fileset>
+	</path>
+</project>

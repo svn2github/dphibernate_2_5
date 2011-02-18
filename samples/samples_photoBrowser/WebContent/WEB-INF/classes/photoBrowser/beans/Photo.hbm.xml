@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="photoBrowser.beans" default-lazy="true">
+  <class name="Photo">
+  	<id name="id" type="string">
+    	<column name="id" length="32"   />
+        <generator class="uuid"></generator>
+	</id>
+
+  	<property name="name" type="string">
+  		<column name="name"></column>
+  	</property>
+
+  	<property name="url" type="string">
+  		<column name="url"></column>
+  	</property>
+
+  	<property name="width" type="integer">
+  		<column name="width" sql-type="int"></column>
+  	</property>
+
+  	<property name="height" type="integer">
+  		<column name="height" sql-type="int"></column>
+  	</property>
+
+  	<property name="ignore" type="boolean">
+  		<column name="ignore" sql-type="int"></column>
+  	</property>
+  	
+  	<many-to-one 
+  		name="parent" 
+  		column="mediaSetId" 
+  		class="MediaSet"
+  		not-null="true" />
+  	
+  </class>
+</hibernate-mapping>

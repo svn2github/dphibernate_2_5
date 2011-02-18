@@ -1,0 +1,77 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant" name="dpHibernate" default="release" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<path id="build-libs" path="build/libs/xmltask.jar" />
+	<path id="maven-ant-tasks.classpath" path="build/libs/maven-ant-tasks-2.0.10.jar" />
+	<import file="build/includes/ivy-includes.xml" />
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="build-libs" />
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+	<artifact:pom id="mypom" file="pom.xml" />
+	<property name="version" value="${mypom.version}" />
+	<property name="output.folder" value="releases/${version}" />
+
+	<target name="clean">
+		<delete dir="${output.folder}" />
+		<mkdir dir="${output.folder}" />
+	</target>
+	<target name="release" depends="clean">
+		<antcall target="build-server" />
+		<antcall target="build-client" />
+		<antcall target="copy" />
+		<antcall target="build-server">
+			<param name="include.sources" value="true" />
+		</antcall>
+		<antcall target="copy" />
+	</target>
+	<target name="install" depends="update-versions,release">
+		<ant antfile="server-adapter/build.xml" target="install" inheritall="false">
+			<property name="version" value="${version}" />
+		</ant>
+		<ant antfile="spring-extensions-2.5.6/build.xml" target="install" inheritall="false">
+			<property name="version" value="${version}" />
+		</ant>
+		<ant antfile="spring-extensions-3.0/build.xml" target="install" inheritall="false">
+			<property name="version" value="${version}" />
+		</ant>
+	</target>
+	<target name="build-server">
+		<ant antfile="server-adapter/build.xml" target="jar" inheritall="false">
+			<property name="version" value="${version}" />
+		</ant>
+		<ant antfile="spring-extensions-2.5.6/build.xml" target="jar" inheritall="false">
+			<property name="version" value="${version}" />
+		</ant>
+		<ant antfile="spring-extensions-3.0/build.xml" target="jar" inheritall="false">
+			<property name="version" value="${version}" />
+		</ant>
+	</target>
+
+	<target name="build-client">
+		<ant antfile="flexLibrary/build.xml" target="compile-swc" inheritall="false" />
+	</target>
+
+	<target name="copy">
+		<copy todir="${output.folder}">
+			<fileset dir="server-adapter/bin" includes="*.jar" />
+			<fileset dir="spring-extensions-2.5.6/bin" includes="*.jar" />
+			<fileset dir="spring-extensions-3.0/bin" includes="*.jar" />
+			<fileset dir="flexLibrary/bin" includes="*.swc" />
+		</copy>
+	</target>
+
+	<target name="update-versions">
+		<echo message="Updating pom versions to ${version}" />
+		<antcall target="update-pom-version">
+			<param name="target-pom" value="server-adapter/pom.xml" />
+		</antcall>
+		<antcall target="update-pom-version">
+			<param name="target-pom" value="spring-extensions-2.5.6/pom.xml" />
+		</antcall>
+		<antcall target="update-pom-version">
+			<param name="target-pom" value="spring-extensions-3.0/pom.xml" />
+		</antcall>
+	</target>
+	<target name="update-pom-version">
+		<xmltask source="${target-pom}" dest="${target-pom}">
+			<replace path="/:project/:version/text()" withText="${version}" />
+		</xmltask>
+	</target>
+</project>

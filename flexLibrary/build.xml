@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project  xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+	name="dpHibernate Flex Library" basedir="." default="compile-swc">
+
+	<path id="maven-ant-tasks.classpath" path="build/libs/maven-ant-tasks-2.0.10.jar" />
+	
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+	<artifact:pom id="mypom" file="pom.xml" />
+	<artifact:pom id="parent-pom" file="../pom.xml" />
+	
+	<property name="version" value="${parent-pom.version}" />
+	
+	<property name="libsPath" value="build/libs" />
+	
+	<property file="local.build.properties" />
+	<property file="build.properties" />
+
+	<taskdef resource="flexTasks.tasks" classpath="${libsPath}/flexTasks.jar" />
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="${libsPath}/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+	
+	<target name="clean">
+		<delete dir="${output.dir}"/>
+		<mkdir dir="${output.dir}" />
+	</target>
+
+	<target name="compile-swc" depends="clean">
+		<pathconvert property="flex.classes" pathsep=" ">
+			<fileset dir="${basedir}\flex-src">
+				<include name="**/*.as" />
+				<include name="**/*.mxml" />
+			</fileset>
+
+			<compositemapper>
+				<chainedmapper>
+					<globmapper from="${basedir}\flex-src\*" to="*" />
+					<mapper type="package" from="*.as" to="*" />
+				</chainedmapper>
+				<chainedmapper>
+					<globmapper from="${basedir}\flex-src\*" to="*" />
+					<mapper type="package" from="*.mxml" to="*" />
+				</chainedmapper>
+				<chainedmapper>
+					<globmapper from="${basedir}/flex-src/*" to="*" />
+					<mapper type="package" from="*.as" to="*" />
+				</chainedmapper>
+				<chainedmapper>
+					<globmapper from="${basedir}/flex-src/*" to="*" />
+					<mapper type="package" from="*.mxml" to="*" />
+				</chainedmapper>
+			</compositemapper>
+		</pathconvert>
+
+		<echo>Compiling : ${flex.classes}</echo>
+		<compc compiler.as3="true" output="${output.dir}/dpHibernate-${version}.swc" incremental="true" fork="true" maxmemory="512m" include-classes="${flex.classes}">
+			<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
+			<source-path path-element="${basedir}/flex-src/" />
+			<namespace uri="http://www.dphibernate.org/2010/mxml" manifest="flex-src/dp-manifest.xml" />
+			<include-namespaces>http://www.dphibernate.org/2010/mxml</include-namespaces>
+		</compc>
+	</target>
+</project>

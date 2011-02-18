@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class 
+    name="bugs.bug5.domain.Menu" 
+    table="SECURE_MENU"
+>
+
+    <id
+        name="menuID"
+        type="java.lang.Long"
+        column="menuid"
+    >
+        <generator class="assigned"/>
+    </id>
+
+    <property
+        name="name"
+        type="java.lang.String"
+        column="name"
+        length="100"
+    />
+    <property
+        name="enabled"
+        type="java.lang.Boolean"
+        column="enabled"
+    />
+    <property
+        name="layerOrder"
+        type="java.lang.String"
+        column="layerOrder"
+        length="100"
+    />
+    <property
+        name="remark"
+        type="java.lang.String"
+        column="remark"
+        length="1000"
+    />
+    
+    <property
+        name="path"
+        type="java.lang.String"
+        column="path"
+        length="200"
+    />
+    
+    <property
+        name="parameters"
+        type="java.lang.String"
+        column="parameters"
+        length="1000"
+    />
+  <property
+        name="type"
+        type="java.lang.String"
+        column="type"
+        length="100"
+    />
+    <!-- Associations -->
+    <bag name="childList"  inverse="true" cascade="all" >
+         <key column="parent" />
+         <one-to-many class="bugs.bug5.domain.Menu" />
+    </bag>
+    
+    
+    <!-- bi-directional many-to-one association to Permission -->
+    <many-to-one
+        name="parent"
+        class="bugs.bug5.domain.Menu"
+        not-null="false"
+    >
+        <column name="parent" />
+    </many-to-one>
+	
+	<set name="permissions" table="SECURE_MENU_PERMISSION" lazy="true" cascade="all" >
+    <key>
+      <column name="MENUID" not-null="true"/>
+    </key>
+    <!-- 在中间表中，权限id应该是唯一的(修改unique为ture改为一对多) -->
+    <many-to-many class="bugs.bug5.domain.Permission" column="PERMISSIONID" unique="true"/>
+  </set>
+
+</class>
+</hibernate-mapping>

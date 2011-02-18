@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexProperties flexServerType="8" flexWarLocation="/UM/360Flex/blazeds.war" serverContextRoot="/WebContent" serverRoot="/UM/dpHibernate/DPHibernate/WebContent" serverRootURL="http://localhost:8080/andiPowellApp2" toolCompile="true" useServerFlexSDK="false" version="1"/>

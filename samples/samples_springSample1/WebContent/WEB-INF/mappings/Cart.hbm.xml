@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">        
+
+<hibernate-mapping>
+    <class name="com.universalmind.hStore.model.vo.Cart" table="carts" lazy="true">
+        <id name="id" column="id">
+            <generator class="uuid"/>
+        </id>
+        <property name="cartDate"/>
+        <property name="orderID"/>
+        <property name="total"/>
+        
+        <list name="items" lazy="true" cascade="all" table="cart_items" fetch="join">
+            <key column="id"/>
+            <index column="idx"/>			
+            <many-to-many class="com.universalmind.hStore.model.vo.Item" column="item" fetch="join"/>
+        </list>
+    </class>
+    
+    <!-- This is a named query that we will use later -->    
+    <query name="all.carts">From Cart</query>
+</hibernate-mapping>

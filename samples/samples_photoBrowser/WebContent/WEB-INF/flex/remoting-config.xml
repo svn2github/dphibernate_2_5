@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="remoting-service"
+    class="flex.messaging.services.RemotingService"
+    messageTypes="flex.messaging.messages.RemotingMessage">
+
+    <adapters>
+        <adapter-definition id="hibernate-object" class="net.digitalprimates.persistence.hibernate.HibernateAdapter" default="true">
+        	<properties>
+        		<hibernate>
+	        		<sessionFactory>
+	        			<class>net.digitalprimates.persistence.hibernate.utils.HibernateUtil</class>
+	        			<getCurrentSessionMethod>getCurrentSession</getCurrentSessionMethod>        			
+	        		</sessionFactory>
+        		</hibernate>
+        	</properties>
+         
+        </adapter-definition>
+    </adapters>
+
+
+    <default-channels>
+        <channel ref="my-amf"/>
+    </default-channels>
+
+	
+	<destination id="mediaService">
+		<properties>
+			<source>photoBrowser.services.MediaService</source>
+			<scope>request</scope>
+			<hibernate>
+				<!--
+					//the name of the method in this class which follows the hibernate
+					//load(Class, id) argument signature.
+					// default is "load"
+				-->
+				<loadMethod>load</loadMethod>
+			</hibernate>
+		</properties>
+	</destination>
+
+
+</service>
+

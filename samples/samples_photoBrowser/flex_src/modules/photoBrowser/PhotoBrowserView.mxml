@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VDividedBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:views="modules.photoBrowser.views.*"
+	creationComplete="creationCompleteEventHandler(event)" xmlns:containers="com.dougmccune.containers.*" xmlns:displayShelf="com.displayShelf.*">
+	
+	
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import modules.photoBrowser.commands.SaveMediaSetCommand;
+			import mx.effects.WipeUp;
+			import events.PhotoEvent;
+			import models.beans.Photo;
+			import models.beans.MediaSet;
+			
+			[Bindable]
+			public var selectedPhoto:Photo;
+			
+			private var _mediaSet:MediaSet;
+			
+			[Bindable]
+			public function get mediaSet():MediaSet
+			{
+				return _mediaSet;
+			}
+			
+			public function set mediaSet(ms:MediaSet):void
+			{
+				_mediaSet = ms;
+				selectedPhoto = null;
+			}
+			
+			
+			protected function photoSelectHandler(event:PhotoEvent):void
+			{
+				selectedPhoto = event.photo;
+			}
+
+
+			protected function saveMediaSet(event:Event=null):void
+			{
+				new SaveMediaSetCommand(mediaSet).setResult(this, "mediaSet").execute();	
+			}
+			
+			
+			protected function creationCompleteEventHandler(event:Event):void
+			{
+				this.addEventListener(PhotoEvent.PHOTO_SELECT, photoSelectHandler, false, 0, true);
+			}
+		]]>
+	</mx:Script>
+	
+	
+	<mx:VBox width="100%" height="100%">	
+		<mx:HBox width="100%" horizontalAlign="right">
+			<mx:LinkButton
+				label="grid"
+				click="vs.selectedIndex=0;"/>
+			<mx:LinkButton
+				label="tile"
+				click="vs.selectedIndex=1"/>
+				
+			<mx:LinkButton
+				label="hTile"
+				click="vs.selectedIndex=2"/>
+				
+			<mx:Spacer width="100%"/>
+			
+			<mx:Button
+				label="Save media set"
+				click="saveMediaSet()"/>
+		</mx:HBox>
+		
+		<mx:ViewStack id="vs" width="100%" height="300"> 
+							
+			<mx:Canvas width="100%" height="100%">				
+				<mx:DataGrid
+					dataProvider="{mediaSet.children}"
+					width="100%" height="100%"
+					change="this.selectedPhoto = event.currentTarget.selectedItem;">
+					<mx:columns>
+						<mx:DataGridColumn headerText="Name" dataField="name" width="150"/>
+						<mx:DataGridColumn headerText="Url" dataField="url"/>
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:Canvas>
+			
+			
+			<mx:Canvas width="100%" height="100%">
+				<mx:TileList 
+					dataProvider="{mediaSet.children}"
+					width="100%" height="100%">
+					<mx:itemRenderer>
+						<mx:Component>				
+							<mx:VBox horizontalAlign="center">				
+								<mx:Script>
+									<![CDATA[
+										import events.PhotoEvent;
+										import models.beans.Photo;
+										protected function selectPhoto(event:Event):void
+										{
+											var e:PhotoEvent = new PhotoEvent(PhotoEvent.PHOTO_SELECT, Photo(data));
+											this.dispatchEvent(e);
+										}
+									]]>
+								</mx:Script>
+								<mx:Image
+									source="{Photo(data).url}"
+									maintainAspectRatio="true"
+									width="100" height="100"
+									click="selectPhoto(event)"/>
+								<mx:Label text="{Photo(data).name}"/>
+							</mx:VBox>
+						</mx:Component>			
+					</mx:itemRenderer>
+				</mx:TileList>
+			</mx:Canvas>
+			
+					
+			<mx:Canvas width="100%" height="100%">
+				<mx:HorizontalList
+					width="100%" height="100%"
+					dataProvider="{mediaSet.children}">
+					<mx:itemRenderer>
+						<mx:Component>				
+							<mx:VBox horizontalAlign="center">				
+								<mx:Script>
+									<![CDATA[
+										import events.PhotoEvent;
+										import models.beans.Photo;
+										protected function selectPhoto(event:Event):void
+										{
+											var e:PhotoEvent = new PhotoEvent(PhotoEvent.PHOTO_SELECT, Photo(data));
+											this.dispatchEvent(e);
+										}
+									]]>
+								</mx:Script>
+								<mx:Image
+									source="{Photo(data).url}"
+									maintainAspectRatio="true"
+									width="200" height="200"
+									click="selectPhoto(event)"/>
+								<mx:Label text="{Photo(data).name}"/>
+							</mx:VBox>
+						</mx:Component>			
+					</mx:itemRenderer>
+				</mx:HorizontalList>	
+			</mx:Canvas>
+			
+		</mx:ViewStack>
+	</mx:VBox>
+	
+	<views:PhotoDetailView
+		width="100%" height="100%" 
+		showEffect="WipeUp"
+		hideEffect="WipeDown"
+		visible="{selectedPhoto != null}"
+		includeInLayout="{selectedPhoto != null}"
+		photo="{selectedPhoto}"/>
+	
+</mx:VDividedBox>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.show_sql">true</property>
+
+	    <property name="hibernate.connection.url">jdbc:sqlserver://scoutal.com:1433;DatabaseName=test_hibernateAdapter;SelectMethod=cursor</property>
+        <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+        <property name="hibernate.connection.username">development</property>
+        <property name="hibernate.connection.password">tna</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+     
+     
+        <mapping resource="net/digitalprimates/samples/sample1/beans/UserAddress.hbm.xml" />
+        <mapping resource="net/digitalprimates/samples/sample1/beans/UserConnectInfo.hbm.xml" />
+        <mapping resource="net/digitalprimates/samples/sample1/beans/User.hbm.xml" />
+
+    </session-factory>
+</hibernate-configuration>

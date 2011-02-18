@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:dp="http://www.digitalprimates.net/2007/mxml" 
+   	creationComplete="initApp()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.rpc.AsyncToken;
+			import mx.controls.Alert;
+			import model.beans.User;
+			import mx.collections.ArrayCollection;
+			import mx.messaging.Channel;
+			import mx.messaging.ChannelSet;
+			import mx.messaging.channels.AMFChannel;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+
+			private var _t1:model.beans.User;
+			private var _t2:model.beans.UserAddress;
+			private var _flexChannelSet:ChannelSet;
+			
+			private function initApp():void
+			{
+				_t1 = new User();
+				var _flexChannel:Channel = new AMFChannel("my-amf", "http://localhost:8080/samples_sample1/messagebroker/amf");			
+					_flexChannelSet = new ChannelSet();
+					_flexChannelSet.addChannel(_flexChannel);
+					
+				testService.channelSet = _flexChannelSet;	
+			}
+
+			[Bindable]
+			public var users:ArrayCollection;
+
+			public function getAllUsers_ResultHandler(event:ResultEvent):void
+			{
+				if( event.token.operation == "getUsers" )
+				{
+					if ( !users ) {
+						trace(event);				
+						users = event.result as ArrayCollection;
+						
+						for ( var i:int =0;i<users.length;i++ ) {
+							trace( i + ' ' + users[i].firstName );
+						}
+					}
+				}
+				else if( event.token.operation == "saveUser" )
+				{
+					trace(event.result); 
+					Alert.show( ObjectUtil.toString(event.result) );
+				}
+			}
+			
+			public function getAllUsers_FaultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultString, "Error");
+			}
+			
+			
+			private function doGetUsers():void
+			{
+				var token:AsyncToken = testService.getUsers();
+					token.operation = "getUsers";					
+			}
+			
+			
+			private function doSave():void
+			{
+				var user:User = User(userList.selectedItem);
+				var token:AsyncToken = testService.saveUser( user );
+					token.operation = "saveUser";
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<dp:HibernateRemoteObject
+		id="testService"
+		destination="sample1"
+		result="getAllUsers_ResultHandler( event )" fault="getAllUsers_FaultHandler( event )">
+	</dp:HibernateRemoteObject>
+
+
+	<mx:HBox width="100%" horizontalAlign="left">		
+		<mx:Button
+			label="Load/Refresh"
+			click="doGetUsers()"/>
+		<mx:Button
+			label="Save Selected User"
+			enabled="{userList.selectedItem!=null}"
+			click="doSave()"/>		
+	</mx:HBox>
+	
+	<mx:DataGrid
+		id="userList"
+		dataProvider="{users}"
+		width="100%">		
+		<mx:columns>
+				<mx:DataGridColumn headerText="firstName" dataField="firstName"/>
+				<mx:DataGridColumn headerText="lastName" dataField="lastName"/>
+		</mx:columns>
+	</mx:DataGrid>
+	 
+	<mx:HBox width="100%">			
+		<mx:VBox width="100%">
+			<mx:Label text="Contact Info:"/>
+			<mx:Label text="email: {User(userList.selectedItem).connectInfo.email}"/>
+			<mx:Label text="yahooIM: {User(userList.selectedItem).connectInfo.yahooIM}"/>
+			<mx:Label text="aolIM: {User(userList.selectedItem).connectInfo.aolIM}"/>
+		</mx:VBox>
+				
+		<mx:DataGrid
+			id="addressList"
+			dataProvider="{User(userList.selectedItem).addresses}"
+			width="100%" height="90">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Address 1" dataField="address1"/>
+				<mx:DataGridColumn headerText="Address 2" dataField="address2"/>
+				<mx:DataGridColumn headerText="City" dataField="city"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:HBox>
+</mx:Application>
+
+

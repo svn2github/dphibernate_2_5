@@ -1,0 +1,17 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">        
+<hibernate-mapping>
+	<class name="com.universalmind.hStore.model.vo.Item" table="items" lazy="true">
+		<id name="id" column="id">
+			<generator class="uuid"/>
+		</id>
+		<property name="sku"/>
+		<property name="name"/>
+		<property name="description"/>
+		<property name="price"/>
+		<property name="added"/>
+		<property name="expires"/>
+	</class>
+	
+	<!-- This is a named query that we will use later -->    
+	<query name="all.items">From Item</query>
+</hibernate-mapping>

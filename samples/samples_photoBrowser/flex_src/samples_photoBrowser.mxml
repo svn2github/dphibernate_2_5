@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute" 
+	xmlns:treeBrowser="modules.treeBrowser.*" 
+	xmlns:photoBrowser="modules.photoBrowser.*">
+
+	<mx:Script>
+		<![CDATA[
+			import models.beans.Photo;
+			import models.beans.MediaSet;
+
+			// reference these classes so the compiler will bring them in.
+			private var _temp1:MediaSet;
+			private var _temp2:Photo;
+		]]>
+	</mx:Script>
+	
+	<mx:ApplicationControlBar dock="true" >
+		<mx:Label text="PHOTO BROWSER" fontSize="20" color="white"/>
+		<mx:Spacer width="100%"/>
+		<mx:LinkButton 
+			label="config"/>
+	</mx:ApplicationControlBar>
+	
+	<mx:HDividedBox width="100%" height="100%">
+		<treeBrowser:TreeBrowserView
+			width="250" height="100%"
+			mediaSetSelect="photoBrowser.mediaSet = event.mediaSet;"/>
+
+		<photoBrowser:PhotoBrowserView
+			id="photoBrowser"
+			width="100%" height="100%"/>
+	</mx:HDividedBox>
+</mx:Application>

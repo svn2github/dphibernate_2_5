@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.dphibernate" module="dpHibernate_springExtensions-3.0" />
+	<dependencies>
+		<dependency org="com.adobe.blazeds" name="blazeds-core" rev="3.2.0.3978"/>
+		<dependency org="com.adobe.blazeds" name="blazeds-common" rev="3.2.0.3978"/>
+		<dependency org="com.adobe.blazeds" name="blazeds-remoting" rev="3.2.0.3978"/>
+		<dependency org="javax.servlet" name="servlet-api" rev="2.5"/>
+	
+		<dependency org="commons-lang" name="commons-lang" rev="2.5"/>
+		<!-- Spring Dependencies -->
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.3.RELEASE" transitive="false" />
+		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.3.RELEASE" transitive="false" />
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.3.RELEASE" transitive="false"/>
+		<dependency org="org.springframework" name="org.springframework.transaction" rev="3.0.3.RELEASE" transitive="false"/>
+		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.3.RELEASE" transitive="false"/>
+		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.3.RELEASE" transitive="false"/>
+
+		<dependency org="org.springframework.security" name="org.springframework.security.core" rev="3.0.3.RELEASE" transitive="false" />
+		<!-- Hibernate -->
+		<dependency org="org.hibernate" name="hibernate-core" rev="3.5.1-Final" transitive="false"/>
+	</dependencies>
+</ivy-module>

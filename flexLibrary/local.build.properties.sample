@@ -1,0 +1,8 @@
+## This is a sample file.
+## Copy and paste to local.build.properties and change 
+## values as required.
+##
+## Any changes made in this file override the values defined in build.properties
+## Do not commit the modified file
+
+FLEX_HOME=C:\\Program Files (x86)\\Adobe\\Adobe Flash Builder Plug-in Beta 2\\sdks\\4.0.0

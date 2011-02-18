@@ -1,0 +1,18 @@
+<ivysettings>
+  <settings defaultResolver="myChain" />
+  <resolvers>
+    <chain name="myChain">
+      <ibiblio name="ibiblio" m2compatible="true" />
+      <ibiblio name="jboss" m2compatible="true" root="https://repository.jboss.org/nexus/content/groups/public/" />
+      <url name="com.springsource.repository.bundles.release">
+    	<ivy pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    	<artifact pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+	  </url>
+
+	  <url name="com.springsource.repository.bundles.external">
+    	<ivy pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    	<artifact pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+	  </url>
+    </chain>
+  </resolvers>
+</ivysettings>

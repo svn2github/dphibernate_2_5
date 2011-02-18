@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	
+<hibernate-mapping package="net.digitalprimates.persistence.hibernate.tests.manyToMany">
+  <class name="M2MUserConnectInfo" table="m2mUserConnectInfo">
+  	<id name="id" type="string">
+    	<column name="id" length="40" />
+        <generator class="uuid"></generator>
+	</id>
+  		
+  	<property name="email" type="string">
+  		<column name="email"></column>
+  	</property>
+  	
+  	<property name="yahooIM" type="string">
+  		<column name="yahooIM"></column>
+  	</property>
+  	
+  	<property name="aolIM" type="string">
+  		<column name="aolIM"></column>
+  	</property>
+  	
+  	<many-to-one name="user" class="M2MPerson" column="userid" />
+  	
+  </class>
+</hibernate-mapping>
