@@ -37,6 +37,7 @@ package org.dphibernate.rpc
 	import mx.utils.DescribeTypeCache;
 	import mx.utils.DescribeTypeCacheRecord;
 	import mx.utils.ObjectUtil;
+	import mx.utils.StringUtil;
 	
 	import org.dphibernate.collections.ManagedArrayList;
 	import org.dphibernate.core.IHibernateProxy;
@@ -342,9 +343,11 @@ package org.dphibernate.rpc
 
 		public static function lazyLoadFailed(event:FaultEvent):void
 		{
-			trace("Lazy load failed");
-
 			var token:AsyncToken=event.token;
+			var entity:Object = token.obj; 
+			var errorMessage:String = StringUtil.substitute("Attempt to load {0} id {1} (requested property: {2}) failed the following error: \n\t{3}",getQualifiedClassName(entity),IHibernateProxy(entity).proxyKey.toString(),token.property,event.fault.faultString)
+			trace(errorMessage);
+
 
 			if (token && token.obj && token.obj is IEventDispatcher)
 			{

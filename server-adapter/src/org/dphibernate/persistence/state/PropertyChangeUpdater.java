@@ -47,7 +47,9 @@ public class PropertyChangeUpdater implements IChangeUpdater
 		}
 		if (matchedName == null)
 		{
-			throw new RuntimeException("Property " + propertyName + " has no getter");
+			
+			log.warn("Received change message for " + propertyName + " on " + entity.getClass().getName() + " which does not have a getter.  Consider marking this property [Transient] on the flex code to prevent this warning.");
+			throw new IllegalUpdateException("Property " + propertyName + " on " + entity.getClass().getName() + " has no getter");
 		}
 		getterName = matchedName;
 	}
@@ -218,7 +220,8 @@ public class PropertyChangeUpdater implements IChangeUpdater
 						newValue = typeMapper.convert(propertyChangeMessage.getNewValue(), targetClass);
 					} else
 					{
-						throw new RuntimeException("Cannot assign or map " + propertyChangeMessage.getNewValue() + " to expected type " + targetClass.getName());
+						String message = "Received " + propertyChangeMessage.getNewValue() + " for " + propertyName + " on class " + entity.getClass().getName() + " which cannot be mapped to expected type " + targetClass.getName();
+						throw new RuntimeException(message);
 					}
 				}
 			}

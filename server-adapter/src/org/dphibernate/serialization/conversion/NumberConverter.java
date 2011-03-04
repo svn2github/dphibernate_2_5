@@ -1,5 +1,7 @@
 package org.dphibernate.serialization.conversion;
 
+import java.math.BigDecimal;
+
 public class NumberConverter implements IConverter
 {
 	@Override
@@ -21,6 +23,7 @@ public class NumberConverter implements IConverter
 	{
 		return (targetClass.isAssignableFrom(Integer.class) 
 				|| targetClass.isAssignableFrom(Long.class)
+				|| targetClass.isAssignableFrom(BigDecimal.class)
 				|| targetClass.isAssignableFrom(Double.class));
 	}
 
@@ -62,6 +65,10 @@ public class NumberConverter implements IConverter
 		{
 			return Long.parseLong(source.toString());
 //			return (Long) source;
+		}
+		if (targetClass.isAssignableFrom(BigDecimal.class))
+		{
+			return new BigDecimal(source.toString());
 		}
 		return targetClass.cast(source);
 	}

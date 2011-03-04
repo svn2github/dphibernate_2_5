@@ -164,7 +164,12 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 		for (PropertyChangeMessage propertyChangeMessage : changeMessage.getChangedProperties())
 		{
 			IChangeUpdater updater = getPropertyChangeUpdater(propertyChangeMessage, entity, proxyResolver);
-			result.addAll(updater.update());
+			
+			// It's possible the updater could return null if the change message was invalid.
+			if (updater != null)
+			{
+				result.addAll(updater.update());
+			}
 		}
 		if (changeMessage.getIsNew())
 		{
@@ -277,7 +282,15 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 			return new CollectionChangeUpdater((CollectionChangeMessage) propertyChangeMessage, entity, proxyResolver2, this);
 		} else
 		{
-			return new PropertyChangeUpdater(propertyChangeMessage, entity, proxyResolver2);
+			try
+			{
+				PropertyChangeUpdater updater = new PropertyChangeUpdater(propertyChangeMessage, entity, proxyResolver2);
+				return updater;
+			} catch (IllegalUpdateException e)
+			{
+				return null;
+			}
+			
 		}
 	}
 
