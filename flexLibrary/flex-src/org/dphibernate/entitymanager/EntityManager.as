@@ -1,63 +1,96 @@
 package org.dphibernate.entitymanager
 {
-	import org.dphibernate.core.IHibernateProxy;
-	import org.dphibernate.persistence.state.IHibernateProxyDescriptor;
-	import org.dphibernate.persistence.state.StateRepository;
 	
+	import flash.utils.getQualifiedClassName;
+	
+	import mx.collections.IList;
+	import mx.utils.StringUtil;
+	
+	import org.dphibernate.core.IEntity;
+
+	/**
+	 * Resolves entities based on the concept of Identity.
+	 * Eg., an entity has an identity (ie., it's primary key).
+	 * We receive many instances of this entity from the server via remoting calls.
+	 * The EntityResolver will take two instances of the same entity, and return a common
+	 * entity.
+	 **/
 	public class EntityManager implements IEntityManager
 	{
-		private var entityMap:Object = {};
-		public function EntityManager()
+		private var entities:Object = new Object(); // Map of Key (from getKey()) and Entity
+		private var defaultResolutionPolicy:IResolutionPolicy;
+		public function EntityManager(defaultResolutionPolicy:IResolutionPolicy=null)
 		{
+			this.defaultResolutionPolicy = defaultResolutionPolicy ||= new NewestIsBestResolutionPolicy();
 		}
 		
-		public function putEntity(proxy:IHibernateProxy):String
+		/**
+		 * Resolves the entity, ensuring that only one version is present throughout the system.
+		 * If this is the first time we have seen the entity, it is stored.
+		 * */
+		public function resolve(entity:IEntity,resolutionPolicy:IResolutionPolicy=null):*
 		{
-			var key:String = StateRepository.getKey(proxy);
-			entityMap[key] = proxy;
-			return null;
-		}
-		
-		public function containsEntity(proxy:IHibernateProxy):Boolean
-		{
-			var key:String = StateRepository.getKey(proxy);
-			return entityMap[key] != null;
-		}
-		
-		public function getEntity(proxy:IHibernateProxy):IHibernateProxy
-		{
-			var key:String = StateRepository.getKey(proxy);
-			return entityMap[key];
-		}
-		
-		public function evictEntity(proxy:IHibernateProxy):IHibernateProxy
-		{
-			var key:String = StateRepository.getKey(proxy);
-			var entityToEvict:IHibernateProxy = entityMap[key] as IHibernateProxy;
-			if (entityToEvict)
+			resolutionPolicy ||= defaultResolutionPolicy;
+			if (!contains(entity))
 			{
-				delete entityMap[key];
+				store(entity)
 			}
-			return entityToEvict;
+			var oldVersion:IEntity = findMatchingEntity(entity) as IEntity;
+			return resolutionPolicy.getResolvedEntity(oldVersion,entity,this);
 		}
 		
-		public function findForDescriptor(descriptor:IHibernateProxyDescriptor):IHibernateProxy
+		/**
+		 * Resolves a collection of entities.
+		 * */
+		public function resolveCollection(collection:IList,resolutionPolicy:IResolutionPolicy=null):*
 		{
-			var key:String = StateRepository.getKeyForDescriptor(descriptor);
-			return findForKey(key);
+			for (var i:int = 0; i < collection.length; i++)
+			{
+				var resolvedItem:* = resolve(collection.getItemAt(i) as IEntity,resolutionPolicy);
+				collection.setItemAt(resolvedItem,i);
+			}
 		}
-		public function containsForDescriptor(descriptor:IHibernateProxyDescriptor):Boolean
+		/**
+		 * Resolves an array of entities.
+		 * */
+		public function resolveArray(array:Array,resolutionPolicy:IResolutionPolicy=null):*
 		{
-			var key:String = StateRepository.getKeyForDescriptor(descriptor);
-			return containsKey(key);
+			for (var i:int = 0; i < array.length; i++)
+			{
+				var originalItem:* = array[i];
+				var resolvedItem:* = resolve(originalItem as IEntity,resolutionPolicy);
+				array[i] = resolvedItem;
+			}
 		}
-		public function findForKey(key:String):IHibernateProxy
+
+		public function findMatchingEntity(entity:IEntity):*
 		{
-			return entityMap[key];
+			return retrieve(getKey(entity));
 		}
-		public function containsKey(key:String):Boolean
+		private function retrieve(key:String):*
 		{
-			return entityMap[key] != null;
+			return entities[key];
+		}
+
+		internal function store(entity:IEntity):void
+		{
+			var key:String = getKey(entity);
+			entities[key] = entity;
+		}
+		
+		
+		public function contains(entity:IEntity):Boolean
+		{
+			return containByKey(getKey(entity)); 
+		}
+
+		private function containByKey(key:String):Boolean
+		{
+			return entities[key] != null;
+		}
+		private function getKey(entity:IEntity):String
+		{
+			return StringUtil.substitute("{0}.{1}",getQualifiedClassName(entity),entity.entityKey);
 		}
 	}
 }

@@ -18,15 +18,6 @@ package org.dphibernate.util
 			return remoteName;
 		}
 
-		public static function getAccessors(object:Object):XMLList
-		{
-			var cacheRecord:DescribeTypeCacheRecord=DescribeTypeCache.describeType(object);
-			var entry:XML; 
-			var accessors:XMLList
-			entry=cacheRecord.typeDescription;
-			accessors=entry.accessor;
-			return accessors;
-		}
 		public static function isTransient( object : Object , propertyName : String ) : Boolean
 		{
 			var entry:XML; 

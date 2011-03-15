@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <componentPackage>
-	<component id="Managed" class="mx.data.utils.Managed"/>
-	<component id="IManaged" class="mx.data.IManaged"/>
-	
-	<component id="HibernateRemoteObject" class="org.dphibernate.rpc.HibernateRemoteObject"/>
+	<component id="DpHibernate" class="org.dphibernate.context.builders.mxml.ContextBuilder"/>
 </componentPackage>
