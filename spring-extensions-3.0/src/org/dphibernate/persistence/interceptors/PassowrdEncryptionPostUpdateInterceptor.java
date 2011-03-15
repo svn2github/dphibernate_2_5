@@ -1,6 +1,6 @@
 package org.dphibernate.persistence.interceptors;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.hibernate.SessionFactory;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 
@@ -14,7 +14,7 @@ public class PassowrdEncryptionPostUpdateInterceptor extends
 		PasswordEncryptionInterceptor implements IPostUpdateInterceptor {
 
 	public PassowrdEncryptionPostUpdateInterceptor(
-			Class<? extends IHibernateProxy> entityClass,
+			Class<? extends IEntity> entityClass,
 			String passwordPropertyName, PasswordEncoder passwordEncoder,
 			SessionFactory sessionFactory) {
 		super(entityClass, passwordPropertyName, passwordEncoder, sessionFactory);

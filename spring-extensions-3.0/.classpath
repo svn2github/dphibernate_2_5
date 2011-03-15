@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dpHibernate_hibernateAdapter"/>
 	<classpathentry kind="lib" path="lib/hibernate-core-3.5.1-Final.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.core-3.0.3.RELEASE.jar"/>
@@ -18,5 +17,6 @@
 	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.web.servlet-3.0.3.RELEASE.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dpHibernate3_hibernateAdapter"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

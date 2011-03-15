@@ -1,6 +1,6 @@
 package org.dphibernate.persistence.state;
 
-import org.dphibernate.serialization.DPHibernateCache;
+import org.dphibernate.serialization.SerializerCache;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,7 @@ public class AuthenticatedObjectChangeUpdater extends BaseSpringWiredObjectChang
 	}
 
 	public AuthenticatedObjectChangeUpdater(SessionFactory sessionFactory,
-			IProxyResolver proxyResolver, DPHibernateCache cache) {
+			IProxyResolver proxyResolver, SerializerCache cache) {
 		super(sessionFactory, proxyResolver, cache);
 		setPrincipleProvider(new SpringPrincipalProvider());
 	}
