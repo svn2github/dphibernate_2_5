@@ -3,7 +3,7 @@ package org.dphibernate.persistence.interceptors;
 import java.security.Principal;
 
 import org.apache.commons.lang.StringUtils;
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.dphibernate.persistence.interceptors.IPasswordEncryptionInterceptor;
 import org.dphibernate.persistence.state.IProxyResolver;
 import org.dphibernate.persistence.state.ObjectChangeMessage;
@@ -33,12 +33,12 @@ import org.springframework.util.ReflectionUtils;
 public class PasswordEncryptionInterceptor implements IPasswordEncryptionInterceptor
 {
 	private final String passwordPropertyName;
-	private final Class<? extends IHibernateProxy> entityClass;
+	private final Class<? extends IEntity> entityClass;
 	private final PasswordEncoder passwordEncoder;
 	private final SessionFactory sessionFactory;
 
 
-	public PasswordEncryptionInterceptor( Class<? extends IHibernateProxy> entityClass, String passwordPropertyName, PasswordEncoder passwordEncoder,SessionFactory sessionFactory)
+	public PasswordEncryptionInterceptor( Class<? extends IEntity> entityClass, String passwordPropertyName, PasswordEncoder passwordEncoder,SessionFactory sessionFactory)
 	{
 		this.passwordPropertyName = passwordPropertyName;
 		this.entityClass = entityClass;
@@ -66,14 +66,14 @@ public class PasswordEncryptionInterceptor implements IPasswordEncryptionInterce
 	@Transactional
 	public void processMessage(ObjectChangeMessage message, IProxyResolver proxyResolver)
 	{
-		IHibernateProxy entity = (IHibernateProxy) proxyResolver.resolve(message.getOwner());
+		IEntity entity = (IEntity) proxyResolver.resolve(message.getOwner());
 		String password = getOriginalPassword(message);
 		String encodedPassword = getEncodedPassword(entity, password);
 		updateEntityWithEncodedPassword(entity, encodedPassword);
 	}
 
 
-	private void updateEntityWithEncodedPassword(IHibernateProxy entity, String encodedPassword)
+	private void updateEntityWithEncodedPassword(IEntity entity, String encodedPassword)
 	{
 		String setterName = "set" + StringUtils.capitalize(passwordPropertyName);
 		try
@@ -89,9 +89,9 @@ public class PasswordEncryptionInterceptor implements IPasswordEncryptionInterce
 	}
 
 
-	private String getEncodedPassword(IHibernateProxy entity, String password)
+	private String getEncodedPassword(IEntity entity, String password)
 	{
-		Object proxyKey = entity.getProxyKey();
+		Object proxyKey = entity.getEntityKey();
 		String encodedPassword = passwordEncoder.encodePassword(password, proxyKey);
 		return encodedPassword;
 	}

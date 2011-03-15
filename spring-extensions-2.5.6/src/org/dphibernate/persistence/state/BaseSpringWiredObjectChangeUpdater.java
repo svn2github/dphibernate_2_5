@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.dphibernate.persistence.interceptors.IPostUpdateInterceptor;
 import org.dphibernate.persistence.interceptors.IPreUpdateInterceptor;
-import org.dphibernate.serialization.DPHibernateCache;
+import org.dphibernate.serialization.SerializerCache;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,7 +28,7 @@ public class BaseSpringWiredObjectChangeUpdater extends ObjectChangeUpdater {
 	}
 
 	public BaseSpringWiredObjectChangeUpdater(SessionFactory sessionFactory,
-			IProxyResolver proxyResolver, DPHibernateCache cache) {
+			IProxyResolver proxyResolver, SerializerCache cache) {
 		super(sessionFactory,proxyResolver,cache);
 	}
 

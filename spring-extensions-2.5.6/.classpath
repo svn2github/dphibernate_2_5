@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dpHibernate_hibernateAdapter"/>
 	<classpathentry kind="lib" path="lib/org.springframework.security.core-2.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.core-2.5.6.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.transaction-2.5.6.jar"/>
@@ -25,5 +24,6 @@
 			<attribute name="owner.project.facets" value="jst.java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/dpHibernate3_hibernateAdapter"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
