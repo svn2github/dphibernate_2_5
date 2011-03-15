@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.dphibernate.persistence.state.HibernateProxyDescriptor;
 import org.dphibernate.persistence.state.IHibernateProxyDescriptor;
 import org.hibernate.Query;

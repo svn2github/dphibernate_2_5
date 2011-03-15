@@ -1,18 +1,19 @@
 package org.dphibernate.serialization;
 
-
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.dphibernate.context.Context;
 
 public class SimpleSerializationFactory implements ISerializerFactory
 {
-	protected SessionFactory sessionFactory;
-	private SerializerConfiguration defaultConfiguration;
+	private final Context context;
+	private final SerializerConfiguration defaultConfiguration;
 
-	public SimpleSerializationFactory()
+	public SimpleSerializationFactory(Context context,SerializerConfiguration defaultConfiguration)
 	{
-		initalizeSessionFactory();
+		this.context = context;
+		this.defaultConfiguration = defaultConfiguration;
 	}
+
+
 	@Override
 	public IDeserializer getDeserializer()
 	{
@@ -21,51 +22,9 @@ public class SimpleSerializationFactory implements ISerializerFactory
 
 
 	@Override
-	public ISerializer getSerializer(Object source)
+	public SerializerBuilder createSerializerFor(Object source)
 	{
-		return getSerializer(source, false);
-	}
-
-
-	@Override
-	public ISerializer getSerializer(Object source, boolean useAggressiveSerialization)
-	{
-		DPHibernateCache cache = new DPHibernateCache();
-		SessionFactory sessionFactory = getSessionFactory();
-		HibernateSerializer hibernateSerializer = new HibernateSerializer(source, useAggressiveSerialization, cache, sessionFactory);
-		hibernateSerializer.configure(defaultConfiguration);
-		return hibernateSerializer;
-	}
-
-
-	@Override
-	public SessionFactory getSessionFactory()
-	{
-		if (sessionFactory == null)
-		{
-			initalizeSessionFactory();
-		}
-		return sessionFactory;
-	}
-
-
-	protected void initalizeSessionFactory()
-	{
-		try
-		{
-			// Create the SessionFactory
-			sessionFactory = new Configuration().configure().buildSessionFactory();
-		} catch (Throwable ex)
-		{
-			// Make sure you log the exception, as it might be swallowed
-			System.err.println("Initial SessionFactory creation failed." + ex);
-			throw new ExceptionInInitializerError(ex);
-		}
-	}
-	@Override
-	public void setDefaultConfiguration(SerializerConfiguration configuration)
-	{
-		this.defaultConfiguration = configuration;
+		return new SerializerBuilder(source,context,defaultConfiguration);
 	}
 
 }

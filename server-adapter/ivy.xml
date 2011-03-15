@@ -11,13 +11,13 @@ xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
 		<dependency org="com.google.guava" name="guava" rev="r06"/>
 		<dependency org="commons-lang" name="commons-lang" rev="2.5"/>
 		<dependency org="com.googlecode.lambdaj" name="lambdaj" rev="2.3"/>
-
+		
 		<!--  Test Dependencies -->
 		<dependency org="org.hibernate" name="hibernate-validator" rev="4.1.0.Final"/>
 		<dependency org="org.hsqldb" name="hsqldb" rev="2.0.0"/>
 		<dependency org="org.mockito" name="mockito-core" rev="1.8.5"/>
 		<dependency org="org.dbunit" name="dbunit" rev="2.4.7"/>
-		<dependency org="junit" name="junit" rev="4.1"/>
+		<dependency org="junit" name="junit" rev="4.5"/>
 		
 	</dependencies>
 </ivy-module>

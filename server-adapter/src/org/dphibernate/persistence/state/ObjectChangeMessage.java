@@ -3,7 +3,7 @@ package org.dphibernate.persistence.state;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 
 
 public class ObjectChangeMessage {
@@ -125,7 +125,7 @@ public class ObjectChangeMessage {
 		}
 		throw new RuntimeException("No change message exists for property " + propertyName);
 	}
-	public static ObjectChangeMessageBuilder buildFor(Class<? extends IHibernateProxy> proxyClass)
+	public static ObjectChangeMessageBuilder buildFor(Class<? extends IEntity> proxyClass)
 	{
 		return new ObjectChangeMessageBuilder(proxyClass);
 	}

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import javax.annotation.Resource;
 
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.hibernate.collection.AbstractPersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -92,8 +92,8 @@ public class CacheProvider implements ICacheProvider {
 				&& !((AbstractPersistentCollection) obj).wasInitialized()) {
 			return ((AbstractPersistentCollection) obj).getRole() + "_"
 					+ ((AbstractPersistentCollection) obj).getKey().hashCode();
-		} else if (obj instanceof IHibernateProxy) {
-			return new EntityCacheKey((IHibernateProxy) obj);
+		} else if (obj instanceof IEntity) {
+			return new EntityCacheKey((IEntity) obj);
 		}
 		return obj;
 	}

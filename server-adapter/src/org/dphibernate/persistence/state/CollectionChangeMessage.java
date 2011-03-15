@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public class CollectionChangeMessage extends PropertyChangeMessage {
 		// performed on collections
 		super(propertyName,null,newValue);
 	}
-	public boolean containsProxyForEntity(IHibernateProxy entity)
+	public boolean containsProxyForEntity(IEntity entity)
 	{
 		String objectClassName = entity.getClass().getName();
 		for (ObjectChangeMessage member : getCollectionMembers())

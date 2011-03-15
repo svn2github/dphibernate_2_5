@@ -25,10 +25,6 @@ import org.junit.BeforeClass;
 
 public abstract class DbTestCase
 {
-//	private static final String JDBC_PASSWORD = "password";
-//	private static final String JDBC_USERNAME = "root";
-//	private static final String JDBC_CONNECTION_URL = "jdbc:mysql://localhost:3306/test";
-//	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	private static final String JDBC_PASSWORD = "";
 	private static final String JDBC_USERNAME = "sa";
 	private static final String JDBC_CONNECTION_URL = "jdbc:hsqldb:mem:dphibernate";

@@ -16,9 +16,9 @@ import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.dphibernate.persistence.interceptors.IChangeMessageInterceptor;
-import org.dphibernate.serialization.DPHibernateCache;
+import org.dphibernate.serialization.SerializerCache;
 import org.hibernate.SessionFactory;
 import org.hibernate.TypeMismatchException;
 
@@ -32,7 +32,7 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 {
 
 	public ObjectChangeUpdater(){}
-	public ObjectChangeUpdater(SessionFactory sessionFactory,IProxyResolver proxyResolver,DPHibernateCache cache)
+	public ObjectChangeUpdater(SessionFactory sessionFactory,IProxyResolver proxyResolver,SerializerCache cache)
 	{
 		this.sessionFactory = sessionFactory;
 		this.proxyResolver = proxyResolver;
@@ -40,7 +40,7 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 	}
 	public ObjectChangeUpdater(SessionFactory sessionFactory,IProxyResolver proxyResolver)
 	{
-		this(sessionFactory,proxyResolver,new DPHibernateCache());
+		this(sessionFactory,proxyResolver,new SerializerCache());
 	}
 	@Resource
 	private SessionFactory sessionFactory;
@@ -49,7 +49,7 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 	private IProxyResolver proxyResolver;
 
 	@Resource
-	private DPHibernateCache cache;
+	private SerializerCache cache;
 	
 	private IPrincipalProvider principalProvider;
 
@@ -57,9 +57,9 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 
 	// When creating a chain of entities, we only commit the very top level
 	// and let hibernate do the rest
-	private IHibernateProxy topLevelEntity;
+	private IEntity topLevelEntity;
 
-	private HashMap<IHibernateProxy, ObjectChangeMessage> entitiesAwaitingCommit = new HashMap<IHibernateProxy, ObjectChangeMessage>();
+	private HashMap<IEntity, ObjectChangeMessage> entitiesAwaitingCommit = new HashMap<IEntity, ObjectChangeMessage>();
 
 	private List<? extends IChangeMessageInterceptor> postProcessors;
 
@@ -140,7 +140,7 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 		processedKeys.put(changeMessageKey,result);
 		if (!changeMessage.hasChanges() && !changeMessage.getIsDeleted())
 			return result;
-		IHibernateProxy entity = getEntity(changeMessage);
+		IEntity entity = getEntity(changeMessage);
 		if (changeMessage.getIsNew())
 		{
 			proxyResolver.addInProcessProxy(changeMessage.getOwner().getKey(), entity);
@@ -183,13 +183,13 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 				 * proxyResolver.removeInProcessProxy(changeMessage.getOwner()
 				 * .getKey(), entity);
 				 */
-				for (Entry<IHibernateProxy, ObjectChangeMessage> entityAwaitingCommit : entitiesAwaitingCommit.entrySet())
+				for (Entry<IEntity, ObjectChangeMessage> entityAwaitingCommit : entitiesAwaitingCommit.entrySet())
 				{
-					IHibernateProxy proxy = entityAwaitingCommit.getKey();
-					if (proxy.getProxyKey() != null)
+					IEntity proxy = entityAwaitingCommit.getKey();
+					if (proxy.getEntityKey() != null)
 					{
 						ObjectChangeMessage dependantChangeMessage = entityAwaitingCommit.getValue();
-						ObjectChangeResult dependentMessageResult = new ObjectChangeResult(dependantChangeMessage, proxy.getProxyKey());
+						ObjectChangeResult dependentMessageResult = new ObjectChangeResult(dependantChangeMessage, proxy.getEntityKey());
 						dependantChangeMessage.setResult(dependentMessageResult);
 						result.add(dependentMessageResult);
 						entitiesAwaitingCommit.remove(entityAwaitingCommit);
@@ -275,7 +275,7 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 	}
 
 
-	private IChangeUpdater getPropertyChangeUpdater(PropertyChangeMessage propertyChangeMessage, IHibernateProxy entity, IProxyResolver proxyResolver2)
+	private IChangeUpdater getPropertyChangeUpdater(PropertyChangeMessage propertyChangeMessage, IEntity entity, IProxyResolver proxyResolver2)
 	{
 		if (propertyChangeMessage instanceof CollectionChangeMessage)
 		{
@@ -296,13 +296,13 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 
 
 	@SuppressWarnings("unchecked")
-	private IHibernateProxy getEntity(ObjectChangeMessage changeMessage)
+	private IEntity getEntity(ObjectChangeMessage changeMessage)
 	{
 		String className = changeMessage.getOwner().getRemoteClassName();
-		Class<? extends IHibernateProxy> entityClass;
+		Class<? extends IEntity> entityClass;
 		try
 		{
-			entityClass = (Class<? extends IHibernateProxy>) Class.forName(className);
+			entityClass = (Class<? extends IEntity>) Class.forName(className);
 		} catch (Exception e)
 		{
 			throw new RuntimeException(e);
@@ -312,7 +312,7 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 		{
 			try
 			{
-				IHibernateProxy instance = entityClass.newInstance();
+				IEntity instance = entityClass.newInstance();
 				changeMessage.setCreatedEntity(instance);
 				return instance;
 			} catch (Exception e)
@@ -329,7 +329,7 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 					primaryKey = Integer.parseInt((String) primaryKey);
 				}
 				Object entity = sessionFactory.getCurrentSession().get(entityClass, primaryKey);
-				return (IHibernateProxy) entity;
+				return (IEntity) entity;
 			} catch (TypeMismatchException e)
 			{
 				e.printStackTrace();
@@ -339,13 +339,13 @@ public class ObjectChangeUpdater implements IObjectChangeUpdater
 	}
 
 
-	public void setCache(DPHibernateCache cache)
+	public void setCache(SerializerCache cache)
 	{
 		this.cache = cache;
 	}
 
 
-	public DPHibernateCache getCache()
+	public SerializerCache getCache()
 	{
 		return cache;
 	}

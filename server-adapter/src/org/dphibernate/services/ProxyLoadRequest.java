@@ -5,7 +5,7 @@ import java.rmi.server.UID;
 
 
 import org.apache.commons.lang.builder.CompareToBuilder;
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 
 import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
@@ -70,11 +70,11 @@ public class ProxyLoadRequest implements Comparable<ProxyLoadRequest>
 	{
 		return this.className.compareTo(o.className);
 	}
-	public boolean matchesEntity(IHibernateProxy entity)
+	public boolean matchesEntity(IEntity entity)
 	{
 		boolean classesMatch = entity.getClass().isAssignableFrom(proxyClass); 
 		return classesMatch
-				&& entity.getProxyKey().equals(this.getProxyID());
+				&& entity.getEntityKey().equals(this.getProxyID());
 	}
 	@Override
 	public String toString()

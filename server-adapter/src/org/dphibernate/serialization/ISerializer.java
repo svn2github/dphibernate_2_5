@@ -26,5 +26,6 @@ package org.dphibernate.serialization;
 public interface ISerializer 
 {
 	Object serialize();
-	void configure(SerializerConfiguration configuration);
+
+	SerializerConfiguration getConfiguration();
 }

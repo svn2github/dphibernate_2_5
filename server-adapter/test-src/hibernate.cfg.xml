@@ -22,6 +22,7 @@
 		<mapping class="org.dphibernate.model.Publisher"/>
 		<mapping class="org.dphibernate.model.Author"/>
 		<mapping class="org.dphibernate.model.Post"/>
-		<mapping class="org.dphibernate.model.BugReport"/>
+		<mapping class="org.dphibernate.model.BlogPost"/>
+		<mapping class="org.dphibernate.model.Comment"/>
 	</session-factory>
 </hibernate-configuration>

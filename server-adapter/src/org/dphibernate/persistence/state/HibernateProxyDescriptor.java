@@ -2,7 +2,7 @@ package org.dphibernate.persistence.state;
 
 import java.io.Serializable;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 
 
 public class HibernateProxyDescriptor implements IHibernateProxyDescriptor {
@@ -72,19 +72,19 @@ public class HibernateProxyDescriptor implements IHibernateProxyDescriptor {
 	{
 		return remoteClassName + "::" + proxyId.toString();
 	}
-	public boolean matches(IHibernateProxy entity)
+	public boolean matches(IEntity entity)
 	{
 		String objectClassName = entity.getClass().getName();
 		if (!getRemoteClassName().equals(objectClassName))
 			return false;
-		if (proxyId.equals(entity.getProxyKey()))
+		if (proxyId.equals(entity.getEntityKey()))
 			return true;
-		if (proxyId instanceof String && entity.getProxyKey() instanceof Integer)
+		if (proxyId instanceof String && entity.getEntityKey() instanceof Integer)
 		{
 			try
 			{
 				Integer parsedKey = Integer.parseInt((String)proxyId);
-				return parsedKey.equals(entity.getProxyKey());
+				return parsedKey.equals(entity.getEntityKey());
 			} catch (NumberFormatException e)
 			{
 				return false;
@@ -93,7 +93,7 @@ public class HibernateProxyDescriptor implements IHibernateProxyDescriptor {
 		return false;
 	}
 	@Override
-	public boolean isForClass(Class<? extends IHibernateProxy> proxyClass)
+	public boolean isForClass(Class<? extends IEntity> proxyClass)
 	{
 		Class<?> remoteClass;
 		try

@@ -22,20 +22,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dphibernate.operations.AdapterOperation;
-import org.dphibernate.persistence.operations.SaveDPProxyOperation;
 import org.dphibernate.serialization.IDeserializer;
 import org.dphibernate.serialization.ISerializer;
 import org.dphibernate.serialization.ISerializerFactory;
-import org.dphibernate.serialization.SerializerConfiguration;
-import org.dphibernate.serialization.SimpleSerializationFactory;
-import org.dphibernate.serialization.operations.LoadDPProxyBatchOperation;
-import org.dphibernate.serialization.operations.LoadDPProxyOperation;
-import org.dphibernate.utils.HibernateUtil;
-
 import flex.messaging.Destination;
 import flex.messaging.config.ConfigMap;
 import flex.messaging.messages.Message;
@@ -46,26 +38,19 @@ import flex.messaging.services.remoting.adapters.JavaAdapter;
 public class RemotingAdapter extends JavaAdapter implements IAdapter
 {
 	private static final Log log = LogFactory.getLog(RemotingAdapter.class);
-	
+
 	protected Destination destination;
 
-	private HashMap<Class<? extends AdapterOperation>,AdapterOperation> operations;
+	private HashMap<Class<? extends AdapterOperation>, AdapterOperation> operations;
 	private ISerializerFactory serializerFactory;
-	
+
 	private final AdapterBuilder builder;
+
+
 	public RemotingAdapter()
 	{
 		super();
 		builder = new AdapterBuilder(this);
-	}
-
-	/**
-	 * Initialize the adapter properties from the flex services-config.xml file
-	 */
-	public void initialize(String id, ConfigMap properties)
-	{
-		super.initialize(id, properties);
-		builder.build(properties);
 	}
 	
 	public Object superInvoke(Message message)
@@ -73,91 +58,105 @@ public class RemotingAdapter extends JavaAdapter implements IAdapter
 		return super.invoke(message);
 	}
 
-
 	/**
-	 * Invoke the Object.method() called through FlashRemoting
+	 * Checks the remotingMessage for any dpHibernate entities, and expands them
+	 * using a deserializer.
+	 * 
+	 * @param remotingMessage
 	 */
-	public Object invoke(Message message)
+	private void deserializeMessage(RemotingMessage remotingMessage)
 	{
-		Object results = null;
-
-		if (message instanceof RemotingMessage)
+		List inArgs = remotingMessage.getParameters();
+		if (inArgs != null && inArgs.size() > 0)
 		{
-			// RemotingDestinationControl remotingDestination =
-			// (RemotingDestinationControl)this.getControl().getParentControl();//destination;
-			RemotingMessage remotingMessage = (RemotingMessage) message;
-			
-			for (AdapterOperation operation : operations.values())
-			{
-				if (operation.appliesForMessage(remotingMessage))
-				{
-					operation.execute(remotingMessage);
-				}
-			}
-
-			System.out.println("{operation})****************" + remotingMessage.getOperation());
-			// Deserialize the incoming object data
-			List inArgs = remotingMessage.getParameters();
-			if (inArgs != null && inArgs.size() > 0)
-			{
-				try
-				{
-					long s1 = new Date().getTime();
-					IDeserializer deserializer = getDeserializer();
-					Object o = deserializer.translate(this, (RemotingMessage) remotingMessage.clone(), null, null, inArgs);
-					long e1 = new Date().getTime();
-					System.out.println("{deserialize} " + (e1 - s1));
-					// remotingMessage.setBody(body);
-				} catch (Exception ex)
-				{
-					ex.printStackTrace();
-					// throw error back to flex
-					// todo: replace with custom exception
-					RuntimeException re = new RuntimeException(ex.getMessage());
-					re.setStackTrace(ex.getStackTrace());
-					throw re;
-				}
-			}
-
-			long s2 = new Date().getTime();
-			// invoke the user class.method()
-			results = super.invoke(remotingMessage);
-			long e2 = new Date().getTime();
-			System.out.println("{invoke} " + (e2 - s2));
-
-			// serialize the result out
 			try
 			{
-				long s3 = new Date().getTime();
-				ISerializer serializer = serializerFactory.getSerializer(results);
-				
-				results = serializer.serialize();
-				long e3 = new Date().getTime();
-				System.out.println("{serialize} " + (e3 - s3));
+				StopWatch sw = new StopWatch("deserialize");
+
+				IDeserializer deserializer = getDeserializer();
+				Object o = deserializer.translate(this, (RemotingMessage) remotingMessage.clone(), null, null, inArgs);
+
+				sw.stopAndLog();
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
-				// throw error back to flex
-				// todo: replace with custom exception
 				RuntimeException re = new RuntimeException(ex.getMessage());
 				re.setStackTrace(ex.getStackTrace());
 				throw re;
 			}
 		}
-
-		return results;
 	}
+
 
 	protected IDeserializer getDeserializer()
 	{
 		return serializerFactory.getDeserializer();
 	}
 
+
 	public <T extends AdapterOperation> T getOperation(Class<T> operationClass)
 	{
 		return (T) operations.get(operationClass);
 	}
-	
+
+
+	@Override
+	public ISerializerFactory getSerializerFactory()
+	{
+		return serializerFactory;
+	}
+
+
+	/**
+	 * Initialize the adapter properties from the flex services-config.xml file
+	 */
+	@Override
+	public void initialize(String id, ConfigMap properties)
+	{
+		super.initialize(id, properties);
+		builder.build(properties);
+	}
+
+
+	/**
+	 * Invoke the Object.method() called through FlashRemoting
+	 */
+	@Override
+	public Object invoke(Message message)
+	{
+		Object results = null;
+
+		if (message instanceof RemotingMessage)
+		{
+			RemotingMessage remotingMessage = (RemotingMessage) message;
+
+			invokeAdapterOperations(remotingMessage);
+
+			deserializeMessage(remotingMessage);
+
+			StopWatch sw = new StopWatch("invoke " + remotingMessage.getOperation());
+			results = super.invoke(remotingMessage);
+			sw.stopAndLog();
+
+			results = serializeResults(results);
+		}
+
+		return results;
+	}
+
+
+	private void invokeAdapterOperations(RemotingMessage remotingMessage)
+	{
+		for (AdapterOperation operation : operations.values())
+		{
+			if (operation.appliesForMessage(remotingMessage))
+			{
+				operation.execute(remotingMessage);
+			}
+		}
+	}
+
+
 	@Override
 	public void putOperation(AdapterOperation operation)
 	{
@@ -168,15 +167,60 @@ public class RemotingAdapter extends JavaAdapter implements IAdapter
 		operations.put(operation.getClass(), operation);
 	}
 
-	@Override
-	public ISerializerFactory getSerializerFactory()
+
+	/**
+	 * Invokes the dpHibernate serializer to replace entities with lazy-loading
+	 * equvilants
+	 * 
+	 * @param results
+	 * @return
+	 */
+	private Object serializeResults(Object results)
 	{
-		return serializerFactory;
+		try
+		{
+			StopWatch sw = new StopWatch("serialize");
+
+			ISerializer serializer = serializerFactory.createSerializerFor(results).build();
+			results = serializer.serialize();
+
+			sw.stopAndLog();
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			// throw error back to flex
+			// todo: replace with custom exception
+			RuntimeException re = new RuntimeException(ex.getMessage());
+			re.setStackTrace(ex.getStackTrace());
+			throw re;
+		}
+		return results;
 	}
+
 
 	@Override
 	public void setSerializerFactory(ISerializerFactory serializerFactory)
 	{
 		this.serializerFactory = serializerFactory;
+	}
+}
+
+class StopWatch
+{
+	private final Date startDate;
+	private final String description;
+
+
+	public StopWatch(String description)
+	{
+		this.description = description;
+		startDate = new Date();
+	}
+
+
+	public void stopAndLog()
+	{
+		Date endDate = new Date();
+		System.out.println("dpHibernate:  " + description + " completed in " + (endDate.getTime() - startDate.getTime()) + "ms");
 	}
 }

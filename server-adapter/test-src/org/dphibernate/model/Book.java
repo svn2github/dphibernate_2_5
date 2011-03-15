@@ -10,12 +10,17 @@ public class Book extends BaseEntity
 	private Author author;
 	private String title;
 	public Book(){};
-	public Book(Author author,String title, Object key)
+	public Book(String title, Integer key)
+	{
+		this.title = title;
+		setId(key);
+	}
+	public Book(Author author,String title, Integer key)
 	{
 		super();
 		this.author = author;
 		this.title = title;
-		setProxyKey(key);
+		setId(key);
 	}
 	public Book(Author author, String title)
 	{

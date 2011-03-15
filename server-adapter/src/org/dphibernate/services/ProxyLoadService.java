@@ -3,7 +3,7 @@ package org.dphibernate.services;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.dphibernate.serialization.PropertyHelper;
+import org.dphibernate.serialization.LegacyPropertyHelper;
 import org.dphibernate.utils.ProxyUtil;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class ProxyLoadService implements IProxyLoadService
 	public Map<String, Object> loadProperties(Class<?> daoClass, Serializable id)
 	{
 		Object bean = loadBean(daoClass, id);
-		Map<String,Object> properties = PropertyHelper.getProperties(bean);
+		Map<String,Object> properties = LegacyPropertyHelper.getProperties(bean);
 		return properties;
 	}
 }

@@ -2,6 +2,7 @@ package org.dphibernate.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.Type;
 
 public class EntityUtil {
@@ -19,5 +20,8 @@ public class EntityUtil {
 		Class<?> entityIdClass = idHibernateType.getReturnedClass();
 		return entityIdClass;
 	}
-
+	public static boolean isLazyProxy(Object obj)
+	{
+		return obj instanceof HibernateProxy && (((HibernateProxy) obj).getHibernateLazyInitializer().isUninitialized());
+	}
 }

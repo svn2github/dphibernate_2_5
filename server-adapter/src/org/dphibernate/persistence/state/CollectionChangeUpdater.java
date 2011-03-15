@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ public class CollectionChangeUpdater extends PropertyChangeUpdater {
 	private final Logger log = LoggerFactory.getLogger(CollectionChangeUpdater.class);
 	private ArrayList members;
 	public CollectionChangeUpdater(CollectionChangeMessage propertyChangeMessage,
-			IHibernateProxy entity, IProxyResolver proxyResolver, ObjectChangeUpdater objectChangeUpdater) {
+			IEntity entity, IProxyResolver proxyResolver, ObjectChangeUpdater objectChangeUpdater) {
 		super(propertyChangeMessage,entity,proxyResolver);
 		this.objectChangeUpdater = objectChangeUpdater;
 	}
@@ -83,7 +83,7 @@ public class CollectionChangeUpdater extends PropertyChangeUpdater {
 			if (sourceCollectionMember == null)
 				continue;
 			
-			if (!getCollectionChangeMessage().containsProxyForEntity((IHibernateProxy) sourceCollectionMember))
+			if (!getCollectionChangeMessage().containsProxyForEntity((IEntity) sourceCollectionMember))
 			{
 				membersToRemove.add(sourceCollectionMember);
 			}

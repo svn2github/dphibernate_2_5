@@ -19,7 +19,7 @@
 
 package org.dphibernate.filters;
 
-import org.dphibernate.utils.HibernateUtil;
+import org.dphibernate.utils.HibernateSessionManager;
 import org.hibernate.SessionFactory;
 
 
@@ -36,7 +36,8 @@ public class HibernateSessionServletFilter extends AbstractHibernateSessionServl
 	@Override
 	public SessionFactory getSessionFactory()
 	{
-		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		
+		SessionFactory sessionFactory = HibernateSessionManager.getSessionFactory();
 		return sessionFactory;
 	}
 

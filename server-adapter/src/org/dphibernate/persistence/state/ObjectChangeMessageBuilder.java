@@ -4,18 +4,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 
 
 public class ObjectChangeMessageBuilder
 {
 
-	private final Class<? extends IHibernateProxy> proxyClass;
+	private final Class<? extends Object> proxyClass;
 	private Serializable id;
 	private boolean isNew = false;
 	private List<PropertyChangeMessage> propertyChangeMessages = new ArrayList<PropertyChangeMessage>();
 	
-	public ObjectChangeMessageBuilder(Class<? extends IHibernateProxy> proxyClass)
+	public ObjectChangeMessageBuilder(Class<? extends Object> proxyClass)
 	{
 		this.proxyClass = proxyClass;
 	}

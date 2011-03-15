@@ -33,8 +33,9 @@ import java.util.List;
 import java.util.Set;
 
 
+import org.apache.commons.lang.NotImplementedException;
 import org.dphibernate.adapters.RemotingAdapter;
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.hibernate.collection.PersistentCollection;
 import org.w3c.dom.Document;
 
@@ -97,7 +98,7 @@ public class HibernateDeserializer implements IDeserializer
 			
 			return pcResult;
 		} 
-		else if (obj != null && obj instanceof IHibernateProxy && !((IHibernateProxy) obj).getProxyInitialized())
+		else if (obj != null && isLazyEntity(obj))
 		{
 			Object hibResult = readHibernateProxy(obj);
 			
@@ -127,17 +128,15 @@ public class HibernateDeserializer implements IDeserializer
 	}
 
 
+	private boolean isLazyEntity(Object obj)
+	{
+		throw new NotImplementedException();
+	}
+
+
 	private boolean isSimple(Object obj)
 	{
-		return ((obj == null) 
-				|| (obj instanceof String) 
-				|| (obj instanceof Character) 
-				|| (obj instanceof Boolean) 
-				|| (obj instanceof Number) 
-				|| (obj instanceof Date) 
-				|| (obj instanceof Calendar)
-				|| (obj instanceof Document));
-		
+		return TypeHelper.isSimple(obj);
 	}
 	
 
@@ -157,7 +156,7 @@ public class HibernateDeserializer implements IDeserializer
 				List paramArray = remotingMessage.getParameters();
 
 				args.add(Class.forName(obj.getClass().getName()));
-				args.add(((IHibernateProxy) obj).getProxyKey());
+				args.add(((IEntity) obj).getEntityKey());
 			}
 
 			remotingMessage.setParameters(args);

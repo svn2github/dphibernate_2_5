@@ -37,7 +37,7 @@ public class MessagingAdapter extends ActionScriptAdapter implements IAdapter
      */
     public Object invoke(Message message)
     {
-        ISerializer serializer = serializerFactory.getSerializer(message.getBody(),true);
+        ISerializer serializer = serializerFactory.createSerializerFor(message.getBody()).build();
         
         Object translatedBody = serializer.serialize();
         message.setBody(translatedBody);

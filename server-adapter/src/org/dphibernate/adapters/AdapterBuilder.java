@@ -2,6 +2,7 @@ package org.dphibernate.adapters;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dphibernate.operations.AdapterOperation;
@@ -11,7 +12,7 @@ import org.dphibernate.serialization.SerializerConfiguration;
 import org.dphibernate.serialization.SimpleSerializationFactory;
 import org.dphibernate.serialization.operations.LoadDPProxyBatchOperation;
 import org.dphibernate.serialization.operations.LoadDPProxyOperation;
-import org.dphibernate.utils.HibernateUtil;
+import org.dphibernate.utils.HibernateSessionManager;
 
 import flex.messaging.config.ConfigMap;
 
@@ -71,7 +72,8 @@ public class AdapterBuilder
 	}
 	private void initializeDefaultConfiguration()
 	{
-		defaultConfiguration = new SerializerConfiguration(pageSize);
+		// Need to be using contextBuilder here
+		throw new NotImplementedException();
 	}
 	private void initalizeSerializerFactory(ConfigMap adapterProps)
 	{
@@ -91,11 +93,15 @@ public class AdapterBuilder
 		{
 			serializationFactoryClass = (Class<ISerializerFactory>) Class.forName(serializationFactoryClassName);
 			ISerializerFactory serializerFactory = serializationFactoryClass.newInstance();
-			serializerFactory.setDefaultConfiguration(defaultConfiguration);
+			
+			// TODO : This hsould use a context builder
+//			serializerFactory.setDefaultConfiguration(defaultConfiguration);
 			adapter.setSerializerFactory(serializerFactory);
 
+			// TODO : Need to build our context
+			throw new NotImplementedException();
 			// TODO : Static reference?  This is a problem...
-			HibernateUtil.setSerializerFactory(serializerFactory);
+//			HibernateSessionManager.setSerializerFactory(serializerFactory);
 		} catch (Exception e)
 		{
 			e.printStackTrace();

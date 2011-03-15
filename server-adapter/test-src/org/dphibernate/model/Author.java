@@ -7,8 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+//BookWriter interface is simply for testing how we handle interfaces 
 @Entity
-public class Author extends BaseEntity
+public class Author extends BaseEntity implements IBookWriter 
 {
 	String name;
 	int age;
@@ -18,10 +19,16 @@ public class Author extends BaseEntity
 	Publisher publisher;
 	
 	@OneToMany(mappedBy="author")
-	private
-	List<Post> posts;
+	private	List<Post> posts;
 	
 	public Author(){}
+	public static Author withNameAndId(String name,int id)
+	{
+		Author author = new Author();
+		author.name = name;
+		author.setId(id);
+		return author;
+	}
 	public Author(String name, int age, Publisher publisher)
 	{
 		this(name,age,publisher,null);

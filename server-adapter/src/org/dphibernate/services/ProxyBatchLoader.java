@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.dphibernate.core.DPHibernateException;
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.dphibernate.utils.ProxyUtil;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
@@ -50,7 +50,7 @@ public class ProxyBatchLoader implements IProxyBatchLoader
 		for (Object entity : loadedEntities)
 		{
 			assertEntityIsHibernateProxy(entity);
-			IHibernateProxy proxy = (IHibernateProxy) entity;
+			IEntity proxy = (IEntity) entity;
 			ProxyLoadRequest matchingRequest = findProxyLoadRequestForProxy(proxy, requests);
 			assertResultWasInListOfRequests(entity, matchingRequest);
 			ProxyLoadResult proxyLoadResult = new ProxyLoadResult(matchingRequest.getRequestKey(), entity);
@@ -69,7 +69,7 @@ public class ProxyBatchLoader implements IProxyBatchLoader
 	}
 
 
-	private ProxyLoadRequest findProxyLoadRequestForProxy(IHibernateProxy proxy, ProxyLoadRequest[] requests)
+	private ProxyLoadRequest findProxyLoadRequestForProxy(IEntity proxy, ProxyLoadRequest[] requests)
 	{
 		for (ProxyLoadRequest request:requests)
 		{
@@ -84,7 +84,7 @@ public class ProxyBatchLoader implements IProxyBatchLoader
 
 	private void assertEntityIsHibernateProxy(Object en)
 	{
-		if (!(en instanceof IHibernateProxy))
+		if (!(en instanceof IEntity))
 		{
 			throw new RuntimeException("Returned object is not IHibernateProxy.  Bulk loading not supported");
 		}

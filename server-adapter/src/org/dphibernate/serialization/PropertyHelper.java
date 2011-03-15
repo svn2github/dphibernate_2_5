@@ -5,64 +5,144 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.dphibernate.serialization.annotations.AggressivelyProxy;
+import org.dphibernate.serialization.annotations.EagerlySerialize;
 import org.dphibernate.serialization.annotations.NeverSerialize;
-
 
 public class PropertyHelper
 {
+	private static final List<String> EXCLUDED_PROPERTY_NAMES = Arrays.asList("handler", "class", "hibernateLazyInitializer", "proxyInitialized");
+	private final Object source;
+	private Map<String, SerializableProperty> properties;
 
-	public static Map<String,Object> getProperties(Object obj)
+
+	public PropertyHelper(Object source)
 	{
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		BeanInfo beanInfo = getBeanInfo(obj);
-		for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors())
-		{
-			String propName = pd.getName();
-			Method readMethod = pd.getReadMethod();
-			if (excludeMethod(readMethod,propName))
-				continue;
-			try
-			{
-				Object val = readMethod.invoke(obj, null);
-				result.put(propName, val);
-			} catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-		}
-		return result;
+		this.source = source;
 	}
-	private static BeanInfo getBeanInfo(Object obj)
+
+
+	public Object getSource()
 	{
+		return source;
+	}
+
+
+	/**
+	 * Returns a list of properties suitable for serialization. Invalid
+	 * properties are exclluded
+	 * 
+	 * @return
+	 */
+	public Collection<SerializableProperty> getProperties()
+	{
+		if (properties == null)
+		{
+			initializePropertyList();
+		}
+		return properties.values();
+	}
+
+
+	private void initializePropertyList()
+	{
+		Map<String, SerializableProperty> result = new HashMap<String, SerializableProperty>();
 		try
 		{
-			BeanInfo info = Introspector.getBeanInfo(obj.getClass());
-			return info;
-		} catch (Exception e) {
+			BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());
+			for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors())
+			{
+				String propName = pd.getName();
+				Method readMethod = pd.getReadMethod();
+				if (readMethod == null || excludeMethod(readMethod) || excludeProperty(propName))
+					continue;
+				Object val = readMethod.invoke(source, null);
+				SerializationMode serializationMode = getSerializationMode(readMethod);
+				SerializableProperty property = new SerializableProperty(propName, val, serializationMode);
+				result.put(propName, property);
+			}
+		} catch (Exception e)
+		{
 			throw new RuntimeException(e);
 		}
+		properties = result;
 	}
-	private static boolean excludeMethod(Method readMethod, String propName)
+
+
+	public Object getPropertyValue(String name)
+	{
+		return properties.get(name).getValue();
+	}
+
+
+	public boolean containsPropertyWithName(String name)
+	{
+		for (SerializableProperty property : getProperties())
+		{
+			if (property.getName().equals(name))
+				return true;
+		}
+		return false;
+	}
+
+
+	public boolean containsPropertyWithValue(Object value)
+	{
+		for (SerializableProperty property : getProperties())
+		{
+			if (property.getValue() == null)
+				continue;
+
+			if (property.getValue().equals(value))
+				return true;
+		}
+		return false;
+	}
+
+
+	private SerializationMode getSerializationMode(Method readMethod)
+	{
+		if (methodHasAnnotation(readMethod, AggressivelyProxy.class))
+			return SerializationMode.AGGRESSIVELY_PROXY;
+		if (methodHasAnnotation(readMethod, EagerlySerialize.class))
+			return SerializationMode.EAGERLY_SERIALIZE;
+		return SerializationMode.NORMAL;
+	}
+
+
+	private boolean excludeProperty(String propName)
+	{
+		return EXCLUDED_PROPERTY_NAMES.contains(propName);
+	}
+
+
+	private boolean excludeMethod(Method readMethod)
 	{
 		if (readMethod == null)
-			return true;
-		if (propertyNameIsExcluded(propName))
 			return true;
 		if (methodHasAnnotation(readMethod, NeverSerialize.class))
 			return true;
 		return false;
 	}
-	public static boolean propertyNameIsExcluded(String propName)
-	{
-		// Note - exclude proxyInitialized because we don't serialzie the value present on the class -- it's up to us to decide
-		return propName.equals("handler") || propName.equals("class") || propName.equals("hibernateLazyInitializer") || propName.equals("proxyInitialized");
-	}
-	public static boolean methodHasAnnotation(Method readMethod, Class<? extends Annotation> annotation)
+
+
+	private boolean methodHasAnnotation(Method readMethod, Class<? extends Annotation> annotation)
 	{
 		return readMethod.getAnnotation(annotation) != null;
+	}
+
+
+	public void removeProperty(String propertyName)
+	{
+		properties.remove(propertyName);
 	}
 
 }

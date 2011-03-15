@@ -2,23 +2,23 @@ package org.dphibernate.serialization;
 
 import java.util.Date;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 
 
 
 public class EntityCacheKey {
 	private final Object id;
 	private final Class entityClass;
-	private IHibernateProxy entity;
-	public EntityCacheKey(IHibernateProxy entity)
+	private IEntity entity;
+	public EntityCacheKey(IEntity entity)
 	{
 		this.entity = entity;
 		this.entityClass = entity.getClass();
-		if (entity.getProxyKey() == null)
+		if (entity.getEntityKey() == null)
 		{
 			this.id = new Date().getTime();
 		} else {
-			this.id = entity.getProxyKey();
+			this.id = entity.getEntityKey();
 		}
 	}
 	@Override

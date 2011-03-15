@@ -1,6 +1,6 @@
 package org.dphibernate.persistence.state;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 
 
 
@@ -9,6 +9,6 @@ public interface IHibernateProxyDescriptor {
 	public Object getProxyId();
 	public void setProxyId(Object object);
 	public String getKey();
-	public boolean matches(IHibernateProxy entity);
-	public boolean isForClass(Class<? extends IHibernateProxy> proxyClass);
+	public boolean matches(IEntity entity);
+	public boolean isForClass(Class<? extends IEntity> proxyClass);
 }

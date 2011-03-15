@@ -1,14 +1,9 @@
 package org.dphibernate.serialization;
 
-import org.hibernate.SessionFactory;
 
 public interface ISerializerFactory
 {
-
-	public ISerializer getSerializer(Object source);
-	public ISerializer getSerializer(Object source, boolean useAggressiveSerialization);
-	public IDeserializer getDeserializer();
+	public SerializerBuilder createSerializerFor(Object source);
 	
-	public SessionFactory getSessionFactory();
-	public void setDefaultConfiguration(SerializerConfiguration configuration);
+	public IDeserializer getDeserializer();
 }

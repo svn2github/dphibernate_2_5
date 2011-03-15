@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.hibernate.SessionFactory;
 
 public class DbProxyResolver implements IProxyResolver {
 
-	private Map<Object, IHibernateProxy> inProcessProxies = new HashMap<Object, IHibernateProxy>();
+	private Map<Object, IEntity> inProcessProxies = new HashMap<Object, IEntity>();
 	private SessionFactory sessionFactory;
 	public DbProxyResolver(SessionFactory sessionFactory)
 	{
@@ -41,11 +41,11 @@ public class DbProxyResolver implements IProxyResolver {
 		
 	}
 	@Override
-	public void addInProcessProxy(Object proxyKey, IHibernateProxy entity) {
+	public void addInProcessProxy(Object proxyKey, IEntity entity) {
 		inProcessProxies.put(proxyKey, entity);
 	}
 	@Override
-	public void removeInProcessProxy(Object proxyKey, IHibernateProxy entity) {
+	public void removeInProcessProxy(Object proxyKey, IEntity entity) {
 		inProcessProxies.remove(proxyKey);
 	}
 

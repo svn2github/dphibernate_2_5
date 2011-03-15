@@ -8,7 +8,7 @@ import java.util.List;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.dphibernate.core.IHibernateProxy;
+import org.dphibernate.core.IEntity;
 import org.dphibernate.serialization.conversion.TypeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ public class PropertyChangeUpdater implements IChangeUpdater
 {
 
 	protected final PropertyChangeMessage propertyChangeMessage;
-	protected final IHibernateProxy entity;
+	protected final IEntity entity;
 	protected final IProxyResolver proxyResolver;
 
 	protected final String propertyName;
@@ -28,7 +28,7 @@ public class PropertyChangeUpdater implements IChangeUpdater
 	protected final Logger log = LoggerFactory.getLogger(PropertyChangeUpdater.class);
 
 
-	public PropertyChangeUpdater(PropertyChangeMessage propertyChangeMessage, IHibernateProxy entity, IProxyResolver proxyResolver)
+	public PropertyChangeUpdater(PropertyChangeMessage propertyChangeMessage, IEntity entity, IProxyResolver proxyResolver)
 	{
 		this.propertyChangeMessage = propertyChangeMessage;
 		this.proxyResolver = proxyResolver;
